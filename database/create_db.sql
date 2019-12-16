@@ -1,1 +1,0 @@
-CREATE DATABASE ascend_db;

@@ -1,0 +1,9 @@
+
+env=Environment(
+    CPPDEFINES=[],
+    CCFLAGS=['-g'],
+    LIBS=['zmq', 'pqxx' ,'pq'],
+	LIBPATH=['third_party/libpqxx-6.4.5/include'],
+    SCONS_CXX_STANDARD='c++14')
+
+env.Program('atc', Glob('*.cpp'))

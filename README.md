@@ -3,5 +3,5 @@ air traffic control for ascend
 
 #Install List
 _____________________________
--mysql
+-postgresql
 
