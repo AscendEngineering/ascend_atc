@@ -3,45 +3,41 @@
 #include <pqxx/pqxx>
 #include <string>
 #include "ascenddb.h"
+#include "messaging/libs/status.pb.h"
 
 int main(){
 
-	// try{
-    //     std::string connection_uri = "postgresql://ascend:ZachLikesAnal917@localhost:5432/ascend_db";
-    //     pqxx::connection database(connection_uri);
-    //     std::cout << "Connected to " << database.dbname() << std::endl;
-    //     pqxx::work conn(database);
+    zmq::context_t context(1);
+    zmq::socket_t socket(context, ZMQ_REP);
+    socket.bind("tcp://*:5555");
 
-    //     pqxx::result result = conn.exec("SELECT * FROM \"Battery\"");
+    std::cout << "Listening..." << std::endl;
+    while(true){
+        zmq::message_t request;
 
-    //     for(auto row: result){
-    //         for(auto data: row){
-    //             std::cout<< data <<std::endl;
-    //         }
-    //     }
+        socket.recv(request,zmq::recv_flags::none);
+        std::string msg = (char*)(request.data());
+        ascend::msg recieved_msg;
+        recieved_msg.ParseFromString(msg);
 
-    // }catch (const std::exception &e){
-    //     std::cout <<"Error in db: " << e.what() << std::endl;
-    // }
+        //Process
+        if(recieved_msg.has_emergency()){
+            std::cout << recieved_msg.emergency().name() << std::endl;
+        }
+        else if(recieved_msg.has_heartbeat()){
+            const ascend::heartbeat_msg& heartbeat = recieved_msg.heartbeat();
+            std::cout << "Long:" << heartbeat.lng() << std::endl;
+            std::cout << "Lat:" << heartbeat.lat() << std::endl;
+            std::cout << "Alt:" << heartbeat.alt() << std::endl;
+            std::cout << "Charge:" << heartbeat.bat_percentage() << std::endl;
+        }
 
-    ascendDB database;
+
+        socket.send(zmq::str_buffer("recieved"), zmq::send_flags::dontwait);
+    }
+
     
-    std::cout << "Connected:" << database.connected() << std::endl;
-    pqxx::result result = database.execute("SELECT * FROM \"Battery\"");
 
-    // zmq::context_t context(1);
-    // zmq::socket_t socket(context, ZMQ_REP);
-    // socket.bind("tcp://*:5555");
-
-    // while(true){
-    //     zmq::message_t request;
-
-    //     socket.recv(request);
-    //     std::string cmd = (char*)(request.data());
-    //     std::cout << "Msg recieved: " << cmd <<std::endl;
-
-    //     socket.send(zmq::str_buffer("recieved"), zmq::send_flags::dontwait);
-    // }
 
     return 0;   
 }

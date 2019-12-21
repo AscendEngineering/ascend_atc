@@ -1,10 +1,23 @@
+import subprocess
+
+protoc_source = "messaging/definitions"
+protoc_dest = "messaging/libs"
+env = Environment() 
+
+#create proto files
+subprocess.check_call("protoc -I=messaging/definitions --cpp_out=messaging/libs messaging/definitions/status.proto", shell=True)
+
+
+messaging_files = Glob('messaging/libs/*.cc')
+messaging_files.append('drone_msg.cpp')
 
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
-    LIBS=['zmq', 'pqxx' ,'pq'],
+    LIBS=['zmq', 'pqxx' ,'pq','protobuf'],
 	LIBPATH=['third_party/libpqxx-6.4.5/include',
             'third_party/zeromq-4.3.2/include'],
     SCONS_CXX_STANDARD='c++14')
 
-env.Program('atc', Glob('*.cpp'))
+env.Program('atc', ['main.cpp','ascenddb.cpp',messaging_files])
+env.Program('test', ['test_send.cpp',messaging_files])
