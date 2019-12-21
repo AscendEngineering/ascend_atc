@@ -32,7 +32,6 @@ int main(){
             std::cout << "Charge:" << heartbeat.bat_percentage() << std::endl;
         }
 
-
         socket.send(zmq::str_buffer("recieved"), zmq::send_flags::dontwait);
     }
 

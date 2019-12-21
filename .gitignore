@@ -3,6 +3,6 @@ libpqxx-6.4.5
 scons-3.1.1
 zeromq-4.3.2
 *.o
-atc
 atc/.sconsign.dblite
 third_party/protobuf-3.11.2/
+atc/atc
