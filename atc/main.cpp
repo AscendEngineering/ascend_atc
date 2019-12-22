@@ -4,19 +4,32 @@
 #include <string>
 #include "ascenddb.h"
 #include "messaging/libs/status.pb.h"
+#include "ascend_zmq.h"
 
 int main(){
 
     zmq::context_t context(1);
-    zmq::socket_t socket(context, ZMQ_REP);
+    zmq::socket_t socket(context, ZMQ_ROUTER);
     socket.bind("tcp://*:5555");
 
     std::cout << "Listening..." << std::endl;
     while(true){
-        zmq::message_t request;
 
-        socket.recv(request,zmq::recv_flags::none);
-        std::string msg = (char*)(request.data());
+        //indentity
+        std::string identity;
+        comm::recv(socket,identity);
+        std::cout<<"Identity: " << identity << std::endl;
+
+        //delimiter
+        std::string del;
+        comm::recv(socket,del);
+        std::cout<<"delimeter: " << del << std::endl;
+
+        //recieve data
+        std::string msg;
+        comm::recv(socket, msg);
+
+        //convert to message
         ascend::msg recieved_msg;
         recieved_msg.ParseFromString(msg);
 
@@ -32,7 +45,12 @@ int main(){
             std::cout << "Charge:" << heartbeat.bat_percentage() << std::endl;
         }
 
-        socket.send(zmq::str_buffer("recieved"), zmq::send_flags::dontwait);
+        std::cout<<"recieved, sending response"<< std::endl;
+        socket.setsockopt( ZMQ_IDENTITY, "PEER2", 5);
+        comm::sendmore(socket,identity);
+        comm::sendmore(socket,"");
+        comm::send(socket,"Recieved");
+
     }
 
     

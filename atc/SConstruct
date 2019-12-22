@@ -9,7 +9,7 @@ subprocess.check_call("protoc -I=messaging/definitions --cpp_out=messaging/libs 
 
 
 messaging_files = Glob('messaging/libs/*.cc')
-messaging_files.append('drone_msg.cpp')
+messaging_files.extend(['drone_msg.cpp','ascend_zmq.cpp'])
 
 env=Environment(
     CPPDEFINES=[],
