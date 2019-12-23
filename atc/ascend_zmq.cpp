@@ -4,23 +4,35 @@
 
 namespace comm {
 
-    bool send(zmq::socket_t & socket, const std::string & string, int flags){
+    bool send(zmq::socket_t & socket, const std::string & data, int flags){
         
-        zmq::message_t message(string.size());
-        memcpy (message.data(), string.data(), string.size());
+        zmq::message_t message(data.size());
+        memcpy (message.data(), data.data(), data.size());
 
         bool rc = socket.send (message, flags);
         return (rc);
     }
 
-    bool sendmore (zmq::socket_t & socket, const std::string & string) {
+    bool sendmore (zmq::socket_t & socket, const std::string & data) {
 
-        zmq::message_t message(string.size());
-        memcpy (message.data(), string.data(), string.size());
+        zmq::message_t message(data.size());
+        memcpy (message.data(), data.data(), data.size());
 
         bool rc = socket.send (message, ZMQ_SNDMORE);
         return (rc);
     }
+
+    bool send(zmq::socket_t & socket, const std::string & to, const std::string & data, int flags){
+        bool rc = true;
+
+        //socket.setsockopt( ZMQ_IDENTITY, to);
+        rc &= sendmore(socket,to);
+        rc &= sendmore(socket,"");
+        rc &= send(socket,data);
+
+        return rc;
+    }
+
 
     bool recv(zmq::socket_t & socket, std::string & ostring, int flags){
         zmq::message_t message;
@@ -31,6 +43,18 @@ namespace comm {
         }
         
         return (rc);
+    }
+
+    bool recv(zmq::socket_t & socket, std::string & from, std::string & ostring, int flags){
+        bool rc = true;
+        std::string delimeter;
+
+        //socket.setsockopt( ZMQ_IDENTITY, to);
+        rc &= recv(socket,from);
+        rc &= recv(socket,delimeter);
+        rc &= recv(socket,ostring);
+
+        return rc;
     }
 }
 

@@ -6,3 +6,6 @@ zeromq-4.3.2
 atc/.sconsign.dblite
 third_party/protobuf-3.11.2/
 atc/atc
+atc/drone
+atc/worker
+atc/test

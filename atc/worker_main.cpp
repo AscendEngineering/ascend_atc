@@ -4,6 +4,10 @@
 #include "drone_msg.h"
 #include "ascend_zmq.h"
 
+//temp
+#include <chrono>
+#include <thread>
+
 
 int main(){
 
@@ -13,11 +17,11 @@ int main(){
     zmq::socket_t socket (context, ZMQ_REQ);
 
     std::cout << "Connecting to server…" << std::endl;
-    socket.setsockopt( ZMQ_IDENTITY, "PEER2", 5);
-    socket.connect ("tcp://localhost:5555");
+    socket.setsockopt( ZMQ_IDENTITY, "WorkerID", 8);
+    socket.connect ("tcp://localhost:5556");
 
     //  Do 10 requests, waiting each time for a response
-    for (int request_nbr = 0; request_nbr != 2; request_nbr++) {
+    while(true) {
         
         //send the data
         comm::send(socket,serial_msg);
@@ -27,8 +31,9 @@ int main(){
         comm::recv(socket,response);
         std::cout<< "response: " <<response <<std::endl;
 
-        //change the message (for testing purposes)
-        serial_msg = msg_generator::generate_emergency();
+        std::cout<<"Sleeping...\n" <<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+        
     }
     
     return 0;

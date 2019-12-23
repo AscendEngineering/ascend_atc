@@ -20,4 +20,5 @@ env=Environment(
     SCONS_CXX_STANDARD='c++14')
 
 env.Program('atc', ['main.cpp','ascenddb.cpp',messaging_files])
-env.Program('test', ['test_send.cpp',messaging_files])
+env.Program('drone', ['drone_main.cpp',messaging_files])
+env.Program('worker', ['worker_main.cpp',messaging_files])
