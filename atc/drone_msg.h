@@ -1,3 +1,5 @@
+#pragma once
+
 #include "messaging/libs/status.pb.h"
 #include <string>
 

@@ -7,9 +7,13 @@ env = Environment()
 #create proto files
 subprocess.check_call("protoc -I=messaging/definitions --cpp_out=messaging/libs messaging/definitions/status.proto", shell=True)
 
-
+#messaging
 messaging_files = Glob('messaging/libs/*.cc')
 messaging_files.extend(['drone_msg.cpp','ascend_zmq.cpp'])
+
+
+#constants
+constant_files = ['constants.h']
 
 env=Environment(
     CPPDEFINES=[],
@@ -19,6 +23,6 @@ env=Environment(
             'third_party/zeromq-4.3.2/include'],
     SCONS_CXX_STANDARD='c++14')
 
-env.Program('atc', ['main.cpp','ascenddb.cpp',messaging_files])
-env.Program('drone', ['drone_main.cpp',messaging_files])
-env.Program('worker', ['worker_main.cpp',messaging_files])
+env.Program('atc', ['main.cpp','ascenddb.cpp',messaging_files,constant_files])
+env.Program('drone', ['drone_main.cpp',messaging_files,constant_files])
+env.Program('worker', ['worker_main.cpp',messaging_files,constant_files])

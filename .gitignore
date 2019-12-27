@@ -9,3 +9,4 @@ atc/atc
 atc/drone
 atc/worker
 atc/test
+workers/a.out
