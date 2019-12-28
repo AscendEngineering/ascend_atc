@@ -33,6 +33,15 @@ std::string msg_generator::serialize(const ascend::msg& to_send){
 }
 
 
+ascend::msg msg_generator::deserialize(const std::string& recv){
+    ascend::msg retval;
+    retval.ParseFromString(recv);
+
+    return retval;
+
+
+}
+
 
 
 

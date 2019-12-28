@@ -6,6 +6,8 @@
 #include "messaging/libs/status.pb.h"
 #include "ascend_zmq.h"
 #include "constants.h"
+#include "drone_msg.h"
+#include <vector>
 
 //temp
 #include <chrono>
@@ -13,74 +15,85 @@
 
 int main(){
 
-    //coutner
+    //variables
     int counter = 0;
+    std::vector<std::string> outgoing;
 
-    //declare sockets
+    //listening
     zmq::context_t context(1);
     zmq::socket_t from_worker(context, ZMQ_ROUTER);
     from_worker.bind("tcp://*:" + constants::from_worker);
     zmq::socket_t from_drone(context, ZMQ_ROUTER);
     from_drone.bind("tcp://*:" + constants::from_drone);
+
+    //sending
     zmq::socket_t to_drone(context, ZMQ_REQ);
 
     zmq::pollitem_t items [] = {
         {static_cast<void*>(from_drone),0,ZMQ_POLLIN,0},
-        {static_cast<void*>(to_drone),0,ZMQ_POLLIN,0},
         {static_cast<void*>(from_worker),0,ZMQ_POLLIN,0}
 
     };
 
     std::cout << "Listening..." << std::endl;
-    while(true){ 
 
-        //try to send msg
-        comm::connect(to_drone,"atc","tcp://localhost:" + constants::to_drone);
-        std::string resp = comm::send(to_drone,"Does this work?");
+    
 
-        std::cout << "Response: " << resp << std::endl;
+    while(true){
 
-        // //poll for messages
-        // zmq::poll (&items [0], 2, -1);  
+        zmq::poll(&items[0], 2, -1);
 
-        // //from drone
-        // if(items[0].revents & ZMQ_POLLIN){
 
-        //     //recieve data
-        //     std::string msg;
-        //     std::string identity;
-        //     comm::recv(drone_socket,identity, msg);
+        //from drone
+        if(items[0].revents & ZMQ_POLLIN){
             
-        //     std::cout<<"...recieved, sending response"<< std::endl;
-        //     comm::send(drone_socket,identity,"Recieved " + std::to_string(counter++));
-        // }
+            //get the msg
+            std::string identity;
+            std::string raw_msg = comm::recv(from_drone,identity);
 
-        // //to drone
-        // if(items[1].revents & ZMQ_POLLIN){
-        //     std::cout << "Message to drone" << std::endl;
+            //deserialize
+            ascend::msg msg = msg_generator::deserialize(raw_msg);
 
-        //     //recieve
-        //     std::string msg;
-        //     std::string identity;
-        //     comm::recv(worker_socket,identity, msg);
+            //check which worker it needs to go to
+            if(msg.has_emergency()){
+                std::cout << "goto emergency" << std::endl;
+            }
+            else if(msg.has_heartbeat()){
+                std::cout << "goto heartbeat" << std::endl;
+            }
+            
 
-        //     //send to frontend (make sure that this is done asynchronously)
+        }
+
+        //from worker
+        if(items[1].revents & ZMQ_POLLIN){
+            std::string identity;
+            std::string msg = comm::recv(from_worker,identity);
+            std::cout <<"Recieved: " << msg << std::endl;
+
+            //worker establishing connection
+            if(identity.substr(0,7) == "outgoing"){
+                
+                //get ip address
+                std::string address = identity.substr(identity.find('|')+1);
+
+                //send
+                comm::connect(to_drone,address,"atc");
+                comm::send(to_drone,msg);
+            }
+            //reply
+            else{
+                comm::send(from_drone,msg,identity);
+            }
+
+        }
 
 
-        // }
 
-        // //worker
-        // if(items[2].revents & ZMQ_POLLIN){
 
-        //     std::cout<< "Message from worker" << std::endl;
 
-        //     //recieve data
-        //     std::string msg;
-        //     std::string identity;
-        //     comm::recv(worker_socket,identity, msg);
-
-        // }
     }
+    
 
     
 

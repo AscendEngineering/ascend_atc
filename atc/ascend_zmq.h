@@ -6,14 +6,14 @@
 namespace comm {
 
     //send
-    std::string send(zmq::socket_t & socket, const std::string & data, int flags = 0);
-    bool send_msg(zmq::socket_t & socket, const std::string & data, int flags = 0);
-    bool connect(zmq::socket_t & socket, const std::string & to, const std::string & ip_address);
-    bool sendmore (zmq::socket_t & socket, const std::string & data);
+    bool connect(zmq::socket_t & socket, const std::string & ip_address, const std::string & from="");
+    std::string send(zmq::socket_t & socket, const std::string& data,const std::string& identity="");
 
-    //recv
-    bool recv(zmq::socket_t & socket, std::string & ostring, int flags = 0);
-    bool recv(zmq::socket_t & socket, std::string & from, std::string & ostring, int flags = 0);
+    //receive
+    std::string recv(zmq::socket_t & socket, std::string& identity);
+
+    //helpers
+    int get_identity(zmq::socket_t & socket);
 
 
 

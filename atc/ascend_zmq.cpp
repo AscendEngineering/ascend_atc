@@ -5,81 +5,99 @@
 
 namespace comm {
 
-    bool connect(zmq::socket_t & socket, const std::string & to, const std::string & ip_address){
-        socket.setsockopt( ZMQ_IDENTITY, to);
+//helpers
+    int get_type(zmq::socket_t & socket){
+        int type;
+        size_t type_size = sizeof (type);
+        zmq_getsockopt (socket, ZMQ_TYPE, &type, &type_size);
+        
+        return type;
+    }
+
+
+//sending
+
+    bool connect(zmq::socket_t & socket, const std::string & ip_address, const std::string & from){
+
+        if(from != ""){
+            socket.setsockopt(ZMQ_IDENTITY, from.c_str(), (int)from.size());
+        }
+
         socket.connect(ip_address);
 
         return true;
-
     }
 
-    bool send_msg(zmq::socket_t & socket, const std::string & data, int flags){
-        
+    std::string send_packet(zmq::socket_t & socket,const std::string& data, int flags=0){
         zmq::message_t message(data.size());
         memcpy (message.data(), data.data(), data.size());
-
-        bool rc = socket.send(message, flags);
-        return (rc);
-    }
-
-    bool sendmore (zmq::socket_t & socket, const std::string & data) {
-
-        zmq::message_t message(data.size());
-        memcpy (message.data(), data.data(), data.size());
-
-        bool rc = socket.send (message, ZMQ_SNDMORE);
-        return (rc);
-    }
-
-    std::string send(zmq::socket_t & socket, const std::string & data, int flags){
-        bool rc = true;
-
-        //if socket is not REQ, throw error here
-
-        //if socket is not connected throw error
-
-        //if zmq_identity is not set, throw error
-
-        
-        rc &= send_msg(socket,data);
-
-        if(!rc){
-            throw zmq::error_t();
+        try{
+            socket.send(message,flags);
+        }catch(zmq::error_t err){
+            std::cerr<<err.what()<<std::endl;
         }
 
-        //get the response
-        std::string response;
-        std::cout<< "About to receive"<< std::endl;
-        recv(socket,response);
-        std::cout<<"REturned" << std::endl;
+        return "sent";
+    }
 
-        return response;
+    std::string send(zmq::socket_t & socket, const std::string& data,const std::string& identity){
+
+        //REQ
+        if(get_type(socket) == ZMQ_PUSH){
+            send_packet(socket,data);
+        }
+
+        //ROUTER
+        else if(get_type(socket) == ZMQ_ROUTER){        
+            send_packet(socket, identity, ZMQ_SNDMORE); //identity
+            send_packet(socket, "", ZMQ_SNDMORE);       //delimeter
+            send_packet(socket, data);                  //data
+        }
+
+        return "sent";
     }
 
 
-    bool recv(zmq::socket_t & socket, std::string & ostring, int flags){
+//receiving
+
+    std::string recv_packet(zmq::socket_t & socket){
         zmq::message_t message;
-        bool rc = socket.recv(&message, flags);
-        std::cout<<"Wait" << std::endl;
+        std::string ostring = "";
+        bool rc = socket.recv(&message, 0);
 
         if (rc) {
+
             ostring = std::string(static_cast<char*>(message.data()), message.size());
         }
         
-        std::cout<<"return" << std::endl;
-        return (rc);
+        return ostring;
     }
 
-    bool recv(zmq::socket_t & socket, std::string & from, std::string & ostring, int flags){
+    std::string recv(zmq::socket_t & socket, std::string& identity){
+        zmq::message_t message;
+        std::string ostring = "";
         bool rc = true;
-        std::string delimeter;
 
-        rc &= recv(socket,from);
-        rc &= recv(socket,delimeter);
-        rc &= recv(socket,ostring);
+        //REQ
+        if(get_type(socket) == ZMQ_REQ){
+            ostring = recv_packet(socket);
+        }
 
-        return rc;
+        //ROUTER
+        else if(get_type(socket) == ZMQ_ROUTER){   
+            identity = recv_packet(socket);
+            recv_packet(socket); //delimeter
+            ostring = recv_packet(socket);
+        }
+        
+        return ostring;
+
     }
+
+
+
+
+   
 }
 
 

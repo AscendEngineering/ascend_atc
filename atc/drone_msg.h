@@ -9,5 +9,6 @@ namespace msg_generator {
         std::string generate_emergency();
 
         std::string serialize(const ascend::msg& to_send);
+        ascend::msg deserialize(const std::string& recv);
 
 }
