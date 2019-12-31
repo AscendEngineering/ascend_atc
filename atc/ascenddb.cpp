@@ -40,6 +40,12 @@ bool ascendDB::connected(){
     return this->database->is_open();
 }
 
+std::string ascendDB::getIP(const std::string& droneName){
+    //TODO
+
+    return "tcp://localhost:5556";
+}
+
 
 
 

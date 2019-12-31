@@ -1,6 +1,7 @@
 #include "ascend_zmq.h"
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 
 namespace comm {
@@ -14,21 +15,14 @@ namespace comm {
         return type;
     }
 
-
-//sending
-
-    bool connect(zmq::socket_t & socket, const std::string & ip_address, const std::string & from){
-
-        if(from != ""){
-            socket.setsockopt(ZMQ_IDENTITY, from.c_str(), (int)from.size());
-        }
+    bool connect(zmq::socket_t & socket, const std::string & ip_address){
 
         socket.connect(ip_address);
 
         return true;
     }
 
-    std::string send_packet(zmq::socket_t & socket,const std::string& data, int flags=0){
+    bool send_packet(zmq::socket_t & socket,const std::string& data, int flags=0){
         zmq::message_t message(data.size());
         memcpy (message.data(), data.data(), data.size());
         try{
@@ -39,26 +33,6 @@ namespace comm {
 
         return "sent";
     }
-
-    std::string send(zmq::socket_t & socket, const std::string& data,const std::string& identity){
-
-        //REQ
-        if(get_type(socket) == ZMQ_PUSH){
-            send_packet(socket,data);
-        }
-
-        //ROUTER
-        else if(get_type(socket) == ZMQ_ROUTER){        
-            send_packet(socket, identity, ZMQ_SNDMORE); //identity
-            send_packet(socket, "", ZMQ_SNDMORE);       //delimeter
-            send_packet(socket, data);                  //data
-        }
-
-        return "sent";
-    }
-
-
-//receiving
 
     std::string recv_packet(zmq::socket_t & socket){
         zmq::message_t message;
@@ -73,25 +47,79 @@ namespace comm {
         return ostring;
     }
 
-    std::string recv(zmq::socket_t & socket, std::string& identity){
-        zmq::message_t message;
-        std::string ostring = "";
-        bool rc = true;
 
-        //REQ
-        if(get_type(socket) == ZMQ_REQ){
-            ostring = recv_packet(socket);
+//sending
+
+    bool send_ack(zmq::socket_t & socket, const std::string& our_name, const std::string& address){
+        bool retval = true;
+
+        //now connect to the new address
+        if(!connect(socket,address)){
+            return false;
         }
 
-        //ROUTER
-        else if(get_type(socket) == ZMQ_ROUTER){   
-            identity = recv_packet(socket);
-            recv_packet(socket); //delimeter
-            ostring = recv_packet(socket);
+        //send
+        retval &= comm::send_packet(socket,our_name, ZMQ_SNDMORE);
+        retval &= comm::send_packet(socket,"", ZMQ_SNDMORE);
+        retval &= comm::send_packet(socket,"A");
+
+        //disconnect
+        zmq_disconnect(socket,address.c_str());
+
+        return retval;
+
+    }
+
+    bool send_msg(zmq::socket_t & socket, const std::string& our_name, const std::string& data, const std::string& address){
+        bool retval = true;
+
+        //connect to new endpoint
+        if(!connect(socket,address)){
+            return false;
         }
+
+        //send
+        retval &= comm::send_packet(socket,our_name, ZMQ_SNDMORE);
+        retval &= comm::send_packet(socket,"", ZMQ_SNDMORE);
+        retval &= comm::send_packet(socket,"O",ZMQ_SNDMORE);
+        retval &= comm::send_packet(socket,"",ZMQ_SNDMORE);
+        retval &= comm::send_packet(socket,data);
+
+        //disconnect
+        zmq_disconnect(socket,address.c_str());
         
-        return ostring;
+        return retval;
+    }
 
+//receiving
+
+    void get_msg_header(zmq::socket_t & socket, std::string& sender, std::string& op){
+        
+        //sender
+        sender = recv_packet(socket);
+
+        //get the delimiter
+        std::string delimit = recv_packet(socket);
+        if(delimit != ""){
+            throw std::runtime_error("Delimit not empty");
+        }
+
+        //get operation
+        op = recv_packet(socket);
+
+    }
+
+
+    std::string get_msg_data(zmq::socket_t & socket){
+        
+        //get the delimeter
+        std::string delimit = recv_packet(socket);
+        if(delimit != ""){
+            throw std::runtime_error("Delimit not empty");
+        }
+
+        //return data
+        return recv_packet(socket);
     }
 
 

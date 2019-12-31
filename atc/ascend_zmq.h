@@ -5,17 +5,11 @@
 
 namespace comm {
 
-    //send
-    bool connect(zmq::socket_t & socket, const std::string & ip_address, const std::string & from="");
-    std::string send(zmq::socket_t & socket, const std::string& data,const std::string& identity="");
+    bool send_ack(zmq::socket_t & socket, const std::string& our_name, const std::string& address);
+    bool send_msg(zmq::socket_t & socket, const std::string& our_name, const std::string& data, const std::string& address);
 
-    //receive
-    std::string recv(zmq::socket_t & socket, std::string& identity);
-
-    //helpers
-    int get_identity(zmq::socket_t & socket);
-
-
+    void get_msg_header(zmq::socket_t & socket, std::string& sender, std::string& op);
+    std::string get_msg_data(zmq::socket_t & socket);
 
 
 }

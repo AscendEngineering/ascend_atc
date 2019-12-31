@@ -13,9 +13,23 @@ int main(){
 
 
     zmq::context_t context (1);
-    zmq::socket_t socket (context, ZMQ_REQ);
+    zmq::socket_t socket (context, ZMQ_ROUTER);
+    socket.bind("tcp://*:5556");
 
-    std::cout << "Connecting to server…" << std::endl;
+    zmq::pollitem_t items [] = {
+        {static_cast<void*>(socket),0,ZMQ_POLLIN,0}
+    };
+
+    while(true){
+
+        zmq::poll(&items[0], 1, 500);
+
+        if(items[0].revents & ZMQ_POLLIN){
+            std::string identity;
+        }
+    }
+
+    //std::cout << "Connecting to server…" << std::endl;
     socket.setsockopt( ZMQ_IDENTITY, "WorkerID", 8);
     socket.connect ("tcp://localhost:5556");
 
