@@ -8,32 +8,11 @@
 #include "constants.h"
 #include "drone_msg.h"
 #include <vector>
-#include <unordered_map>
+#include "ledger.h"
 
 //temp
 #include <chrono>
 #include <thread>
-
-
-unsigned int now(){
-    
-    //set up the chrono
-    std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
-    std::chrono::system_clock::duration dtn = tp.time_since_epoch();
-
-    unsigned int retval = dtn.count() * std::chrono::system_clock::period::num / std::chrono::system_clock::period::den;
-    return retval;
-}
-
-void listLedger(const std::unordered_map<std::string,unsigned int>& ledger){
-
-    std::cout << "\nLedger\n_____________" << std::endl;
-    for(auto itr = ledger.begin(); itr != ledger.end(); itr++){
-        std::cout << "Key: " << itr->first << " Val: " << itr->second << std::endl;
-    }
-
-
-}
 
 
 int main(){
@@ -42,13 +21,13 @@ int main(){
     zmq::context_t context(1);
     zmq::socket_t recv_socket(context, ZMQ_PULL);
     recv_socket.bind("tcp://*:" + constants::from_drone);
+    ledger msg_tracker;
 
     //sending
     zmq::socket_t send_socket(context, ZMQ_PUSH);
 
     //variables
     int counter = 0;
-    std::unordered_map<std::string,unsigned int> ledger;
     zmq::pollitem_t items [] = {
         {static_cast<void*>(recv_socket),0,ZMQ_POLLIN,0}
 
@@ -72,10 +51,9 @@ int main(){
 
             if(operation == "A"){
                 std::cout<<"Acknowledgement" << std::endl;
+                msg_tracker.msg_ack(sender);
+                msg_tracker.listLedger();
 
-                //remove the drone from the mail list
-                ledger.erase(sender);
-                listLedger(ledger);
             }
             else if(operation == "O"){
                 data = comm::get_msg_data(recv_socket);
@@ -87,22 +65,32 @@ int main(){
             
         }
         else{
+            std::cout << "Sending request to drone" << std::endl;
             
             //simulates something sent from worker
 
             //add drone to mail ledger
             std::string drone_name = "drone1";
-            ledger[drone_name] = now();
+            
+            //mark in ledger
+            msg_tracker.msg_sent(drone_name);
+            msg_tracker.listLedger();
 
             //translate name to ip
             std::string ip_address = ascendDB().getIP(drone_name);
-            listLedger(ledger);
-
-            
             comm::send_msg(send_socket,"atc","Hello Drone",ip_address);
+            
         }
 
-        
+        //check what messages have not gotten returned
+        std::vector<std::string> expired_drones = msg_tracker.ttl_exceeded();
+        if(expired_drones.size() > 0){
+            std::cout <<"\nERROR - Unresponsive drones\n_________________" << std::endl;
+            for(auto name: expired_drones){
+                std::cout<<name<<"\n";
+            }
+            std::cout<<std::endl;
+        }
 
     }
     
