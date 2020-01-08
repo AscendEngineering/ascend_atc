@@ -15,6 +15,9 @@ messaging_files.extend(['drone_msg.cpp','ascend_zmq.cpp'])
 #constants
 constant_files = ['constants.h']
 
+#drone files
+drone_files = ['drone.cpp',messaging_files,constant_files]
+
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
@@ -24,5 +27,5 @@ env=Environment(
     SCONS_CXX_STANDARD='c++14')
 
 env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,constant_files])
-env.Program('drone', ['drone_main.cpp',messaging_files,constant_files])
+env.Program('drone', ['drone_main.cpp',drone_files, 'config_handler.cpp'])
 env.Program('worker', ['worker_main.cpp',messaging_files,constant_files])

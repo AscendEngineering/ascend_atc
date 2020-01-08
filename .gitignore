@@ -10,3 +10,4 @@ atc/drone
 atc/worker
 atc/test
 workers/a.out
+config.txt

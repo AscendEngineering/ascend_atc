@@ -50,9 +50,7 @@ int main(){
             comm::get_msg_header(recv_socket,sender,operation);
 
             if(operation == "A"){
-                std::cout<<"Acknowledgement" << std::endl;
                 msg_tracker.msg_ack(sender);
-                msg_tracker.listLedger();
 
             }
             else if(operation == "O"){
@@ -74,20 +72,18 @@ int main(){
             
             //mark in ledger
             msg_tracker.msg_sent(drone_name);
-            msg_tracker.listLedger();
 
             //translate name to ip
             std::string ip_address = ascendDB().getIP(drone_name);
-            comm::send_msg(send_socket,"atc","Hello Drone",ip_address);
-            
+            comm::send_msg(send_socket,"atc","Hello Drone" + std::to_string(counter++),ip_address);
         }
 
         //check what messages have not gotten returned
         std::vector<std::string> expired_drones = msg_tracker.ttl_exceeded();
         if(expired_drones.size() > 0){
-            std::cout <<"\nERROR - Unresponsive drones\n_________________" << std::endl;
+            std::cout <<"\nERROR - Unresponsive drones" << std::endl;
             for(auto name: expired_drones){
-                std::cout<<name<<"\n";
+                std::cout<<"\t"<<name<<"\n";
             }
             std::cout<<std::endl;
         }
