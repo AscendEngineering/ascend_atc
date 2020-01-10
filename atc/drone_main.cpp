@@ -21,16 +21,17 @@ int main(){
     }
 
 
-    // while(true){
+    while(true){
 
-    //     //receive messages
-    //     std::vector<std::string> messages = ascendDrone.collect_messages();
-    //     if(messages.size() > 0){
-    //         std::cout<<"Messages"<<std::endl;
-    //         for(auto msg: messages){
-    //             std::cout<<"\t"<<msg<<std::endl;
-    //         }
-    //     }
+        //receive messages
+        std::vector<std::string> messages = ascendDrone.collect_messages();
+        if(messages.size() > 0){
+            std::cout<<"Messages"<<std::endl;
+            for(auto msg: messages){
+                std::cout<<"\t"<<msg<<std::endl;
+            }
+        }
+    }
 
     //     //if time, send heartbeat
         

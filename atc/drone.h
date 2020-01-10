@@ -32,5 +32,4 @@ class drone{
         drone(const drone&);
         drone & operator=(const drone&);
 
-
 };
