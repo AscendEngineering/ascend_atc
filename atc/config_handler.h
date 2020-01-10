@@ -28,6 +28,5 @@ class config_handler {
         config_handler(std::string filename="config.txt");
         config_handler(const config_handler&);
         void operator=(config_handler const&);
-
-        
+ 
 };
