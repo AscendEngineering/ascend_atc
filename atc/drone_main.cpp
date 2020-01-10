@@ -16,12 +16,6 @@ int main(){
     drone ascendDrone;
     
     while(true){
-        std::cout<<config_handler::instance()["name"]<<std::endl;
-        std::cout<<config_handler::instance()["ip_address"]<<std::endl;
-    }
-
-
-    while(true){
 
         //receive messages
         std::vector<std::string> messages = ascendDrone.collect_messages();
