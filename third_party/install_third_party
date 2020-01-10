@@ -1,0 +1,44 @@
+#go into archives and extract all
+
+#for FILE in $(ls archive)
+#do
+#    tar -xzf archive/$FILE
+#done
+
+#do what we can with apt-get
+sudo apt-get install autoconf automake libtool curl make g++ unzip
+sudo apt-get install scons
+sudo apt-get install libtool-bin=2.4.6-9
+sudo apt-get install libpq-dev=11.5-1+deb10u1
+sudo apt-get install xmlto
+
+#zeromq
+cd zeromq-4.3.2
+./autogen.sh
+./configure
+make
+make install 
+cd ../
+  
+#cppzmq
+cd cppzmq-4.5.0
+mkdir build
+cd build
+cmake ..
+sudo make -j4 install
+cd ../../
+
+#libpqxx
+cd libpqxx-6.4.5
+./configure
+make
+sudo make install
+cd ..
+
+#protobuf
+cd protobuf-3.11.2
+./configure
+make
+sudo make install
+sudo ldconfig 
+cd .. 
