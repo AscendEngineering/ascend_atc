@@ -47,7 +47,7 @@ struct TableStruct_status_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[3]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -61,6 +61,12 @@ extern emergency_msgDefaultTypeInternal _emergency_msg_default_instance_;
 class heartbeat_msg;
 class heartbeat_msgDefaultTypeInternal;
 extern heartbeat_msgDefaultTypeInternal _heartbeat_msg_default_instance_;
+class issue_landing_msg;
+class issue_landing_msgDefaultTypeInternal;
+extern issue_landing_msgDefaultTypeInternal _issue_landing_msg_default_instance_;
+class landing_request_msg;
+class landing_request_msgDefaultTypeInternal;
+extern landing_request_msgDefaultTypeInternal _landing_request_msg_default_instance_;
 class msg;
 class msgDefaultTypeInternal;
 extern msgDefaultTypeInternal _msg_default_instance_;
@@ -68,6 +74,8 @@ extern msgDefaultTypeInternal _msg_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::ascend::emergency_msg* Arena::CreateMaybeMessage<::ascend::emergency_msg>(Arena*);
 template<> ::ascend::heartbeat_msg* Arena::CreateMaybeMessage<::ascend::heartbeat_msg>(Arena*);
+template<> ::ascend::issue_landing_msg* Arena::CreateMaybeMessage<::ascend::issue_landing_msg>(Arena*);
+template<> ::ascend::landing_request_msg* Arena::CreateMaybeMessage<::ascend::landing_request_msg>(Arena*);
 template<> ::ascend::msg* Arena::CreateMaybeMessage<::ascend::msg>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace ascend {
@@ -409,6 +417,325 @@ class emergency_msg :
 };
 // -------------------------------------------------------------------
 
+class landing_request_msg :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:ascend.landing_request_msg) */ {
+ public:
+  landing_request_msg();
+  virtual ~landing_request_msg();
+
+  landing_request_msg(const landing_request_msg& from);
+  landing_request_msg(landing_request_msg&& from) noexcept
+    : landing_request_msg() {
+    *this = ::std::move(from);
+  }
+
+  inline landing_request_msg& operator=(const landing_request_msg& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline landing_request_msg& operator=(landing_request_msg&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const landing_request_msg& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const landing_request_msg* internal_default_instance() {
+    return reinterpret_cast<const landing_request_msg*>(
+               &_landing_request_msg_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(landing_request_msg& a, landing_request_msg& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(landing_request_msg* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline landing_request_msg* New() const final {
+    return CreateMaybeMessage<landing_request_msg>(nullptr);
+  }
+
+  landing_request_msg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<landing_request_msg>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const landing_request_msg& from);
+  void MergeFrom(const landing_request_msg& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(landing_request_msg* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "ascend.landing_request_msg";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_status_2eproto);
+    return ::descriptor_table_status_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 1,
+  };
+  // required string name = 1;
+  bool has_name() const;
+  private:
+  bool _internal_has_name() const;
+  public:
+  void clear_name();
+  const std::string& name() const;
+  void set_name(const std::string& value);
+  void set_name(std::string&& value);
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  std::string* mutable_name();
+  std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // @@protoc_insertion_point(class_scope:ascend.landing_request_msg)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  friend struct ::TableStruct_status_2eproto;
+};
+// -------------------------------------------------------------------
+
+class issue_landing_msg :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:ascend.issue_landing_msg) */ {
+ public:
+  issue_landing_msg();
+  virtual ~issue_landing_msg();
+
+  issue_landing_msg(const issue_landing_msg& from);
+  issue_landing_msg(issue_landing_msg&& from) noexcept
+    : issue_landing_msg() {
+    *this = ::std::move(from);
+  }
+
+  inline issue_landing_msg& operator=(const issue_landing_msg& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline issue_landing_msg& operator=(issue_landing_msg&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const issue_landing_msg& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const issue_landing_msg* internal_default_instance() {
+    return reinterpret_cast<const issue_landing_msg*>(
+               &_issue_landing_msg_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(issue_landing_msg& a, issue_landing_msg& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(issue_landing_msg* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline issue_landing_msg* New() const final {
+    return CreateMaybeMessage<issue_landing_msg>(nullptr);
+  }
+
+  issue_landing_msg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<issue_landing_msg>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const issue_landing_msg& from);
+  void MergeFrom(const issue_landing_msg& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(issue_landing_msg* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "ascend.issue_landing_msg";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_status_2eproto);
+    return ::descriptor_table_status_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 1,
+    kWorkerAddressFieldNumber = 2,
+  };
+  // required string name = 1;
+  bool has_name() const;
+  private:
+  bool _internal_has_name() const;
+  public:
+  void clear_name();
+  const std::string& name() const;
+  void set_name(const std::string& value);
+  void set_name(std::string&& value);
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  std::string* mutable_name();
+  std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // required string worker_address = 2;
+  bool has_worker_address() const;
+  private:
+  bool _internal_has_worker_address() const;
+  public:
+  void clear_worker_address();
+  const std::string& worker_address() const;
+  void set_worker_address(const std::string& value);
+  void set_worker_address(std::string&& value);
+  void set_worker_address(const char* value);
+  void set_worker_address(const char* value, size_t size);
+  std::string* mutable_worker_address();
+  std::string* release_worker_address();
+  void set_allocated_worker_address(std::string* worker_address);
+  private:
+  const std::string& _internal_worker_address() const;
+  void _internal_set_worker_address(const std::string& value);
+  std::string* _internal_mutable_worker_address();
+  public:
+
+  // @@protoc_insertion_point(class_scope:ascend.issue_landing_msg)
+ private:
+  class _Internal;
+
+  // helper for ByteSizeLong()
+  size_t RequiredFieldsByteSizeFallback() const;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr worker_address_;
+  friend struct ::TableStruct_status_2eproto;
+};
+// -------------------------------------------------------------------
+
 class msg :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:ascend.msg) */ {
  public:
@@ -455,6 +782,8 @@ class msg :
   enum TypeCase {
     kHeartbeat = 1,
     kEmergency = 2,
+    kLandingRequest = 3,
+    kIssueLanding = 4,
     TYPE_NOT_SET = 0,
   };
 
@@ -464,7 +793,7 @@ class msg :
                &_msg_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(msg& a, msg& b) {
     a.Swap(&b);
@@ -530,6 +859,8 @@ class msg :
   enum : int {
     kHeartbeatFieldNumber = 1,
     kEmergencyFieldNumber = 2,
+    kLandingRequestFieldNumber = 3,
+    kIssueLandingFieldNumber = 4,
   };
   // optional .ascend.heartbeat_msg heartbeat = 1;
   bool has_heartbeat() const;
@@ -561,6 +892,36 @@ class msg :
   ::ascend::emergency_msg* _internal_mutable_emergency();
   public:
 
+  // optional .ascend.landing_request_msg landing_request = 3;
+  bool has_landing_request() const;
+  private:
+  bool _internal_has_landing_request() const;
+  public:
+  void clear_landing_request();
+  const ::ascend::landing_request_msg& landing_request() const;
+  ::ascend::landing_request_msg* release_landing_request();
+  ::ascend::landing_request_msg* mutable_landing_request();
+  void set_allocated_landing_request(::ascend::landing_request_msg* landing_request);
+  private:
+  const ::ascend::landing_request_msg& _internal_landing_request() const;
+  ::ascend::landing_request_msg* _internal_mutable_landing_request();
+  public:
+
+  // optional .ascend.issue_landing_msg issue_landing = 4;
+  bool has_issue_landing() const;
+  private:
+  bool _internal_has_issue_landing() const;
+  public:
+  void clear_issue_landing();
+  const ::ascend::issue_landing_msg& issue_landing() const;
+  ::ascend::issue_landing_msg* release_issue_landing();
+  ::ascend::issue_landing_msg* mutable_issue_landing();
+  void set_allocated_issue_landing(::ascend::issue_landing_msg* issue_landing);
+  private:
+  const ::ascend::issue_landing_msg& _internal_issue_landing() const;
+  ::ascend::issue_landing_msg* _internal_mutable_issue_landing();
+  public:
+
   void clear_type();
   TypeCase type_case() const;
   // @@protoc_insertion_point(class_scope:ascend.msg)
@@ -568,6 +929,8 @@ class msg :
   class _Internal;
   void set_has_heartbeat();
   void set_has_emergency();
+  void set_has_landing_request();
+  void set_has_issue_landing();
 
   inline bool has_type() const;
   inline void clear_has_type();
@@ -579,6 +942,8 @@ class msg :
     TypeUnion() {}
     ::ascend::heartbeat_msg* heartbeat_;
     ::ascend::emergency_msg* emergency_;
+    ::ascend::landing_request_msg* landing_request_;
+    ::ascend::issue_landing_msg* issue_landing_;
   } type_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
 
@@ -784,6 +1149,227 @@ inline void emergency_msg::set_allocated_name(std::string* name) {
 
 // -------------------------------------------------------------------
 
+// landing_request_msg
+
+// required string name = 1;
+inline bool landing_request_msg::_internal_has_name() const {
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  return value;
+}
+inline bool landing_request_msg::has_name() const {
+  return _internal_has_name();
+}
+inline void landing_request_msg::clear_name() {
+  name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& landing_request_msg::name() const {
+  // @@protoc_insertion_point(field_get:ascend.landing_request_msg.name)
+  return _internal_name();
+}
+inline void landing_request_msg::set_name(const std::string& value) {
+  _internal_set_name(value);
+  // @@protoc_insertion_point(field_set:ascend.landing_request_msg.name)
+}
+inline std::string* landing_request_msg::mutable_name() {
+  // @@protoc_insertion_point(field_mutable:ascend.landing_request_msg.name)
+  return _internal_mutable_name();
+}
+inline const std::string& landing_request_msg::_internal_name() const {
+  return name_.GetNoArena();
+}
+inline void landing_request_msg::_internal_set_name(const std::string& value) {
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void landing_request_msg::set_name(std::string&& value) {
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ascend.landing_request_msg.name)
+}
+inline void landing_request_msg::set_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ascend.landing_request_msg.name)
+}
+inline void landing_request_msg::set_name(const char* value, size_t size) {
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ascend.landing_request_msg.name)
+}
+inline std::string* landing_request_msg::_internal_mutable_name() {
+  _has_bits_[0] |= 0x00000001u;
+  return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* landing_request_msg::release_name() {
+  // @@protoc_insertion_point(field_release:ascend.landing_request_msg.name)
+  if (!_internal_has_name()) {
+    return nullptr;
+  }
+  _has_bits_[0] &= ~0x00000001u;
+  return name_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void landing_request_msg::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    _has_bits_[0] |= 0x00000001u;
+  } else {
+    _has_bits_[0] &= ~0x00000001u;
+  }
+  name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:ascend.landing_request_msg.name)
+}
+
+// -------------------------------------------------------------------
+
+// issue_landing_msg
+
+// required string name = 1;
+inline bool issue_landing_msg::_internal_has_name() const {
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  return value;
+}
+inline bool issue_landing_msg::has_name() const {
+  return _internal_has_name();
+}
+inline void issue_landing_msg::clear_name() {
+  name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& issue_landing_msg::name() const {
+  // @@protoc_insertion_point(field_get:ascend.issue_landing_msg.name)
+  return _internal_name();
+}
+inline void issue_landing_msg::set_name(const std::string& value) {
+  _internal_set_name(value);
+  // @@protoc_insertion_point(field_set:ascend.issue_landing_msg.name)
+}
+inline std::string* issue_landing_msg::mutable_name() {
+  // @@protoc_insertion_point(field_mutable:ascend.issue_landing_msg.name)
+  return _internal_mutable_name();
+}
+inline const std::string& issue_landing_msg::_internal_name() const {
+  return name_.GetNoArena();
+}
+inline void issue_landing_msg::_internal_set_name(const std::string& value) {
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void issue_landing_msg::set_name(std::string&& value) {
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ascend.issue_landing_msg.name)
+}
+inline void issue_landing_msg::set_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ascend.issue_landing_msg.name)
+}
+inline void issue_landing_msg::set_name(const char* value, size_t size) {
+  _has_bits_[0] |= 0x00000001u;
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ascend.issue_landing_msg.name)
+}
+inline std::string* issue_landing_msg::_internal_mutable_name() {
+  _has_bits_[0] |= 0x00000001u;
+  return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* issue_landing_msg::release_name() {
+  // @@protoc_insertion_point(field_release:ascend.issue_landing_msg.name)
+  if (!_internal_has_name()) {
+    return nullptr;
+  }
+  _has_bits_[0] &= ~0x00000001u;
+  return name_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void issue_landing_msg::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    _has_bits_[0] |= 0x00000001u;
+  } else {
+    _has_bits_[0] &= ~0x00000001u;
+  }
+  name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:ascend.issue_landing_msg.name)
+}
+
+// required string worker_address = 2;
+inline bool issue_landing_msg::_internal_has_worker_address() const {
+  bool value = (_has_bits_[0] & 0x00000002u) != 0;
+  return value;
+}
+inline bool issue_landing_msg::has_worker_address() const {
+  return _internal_has_worker_address();
+}
+inline void issue_landing_msg::clear_worker_address() {
+  worker_address_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline const std::string& issue_landing_msg::worker_address() const {
+  // @@protoc_insertion_point(field_get:ascend.issue_landing_msg.worker_address)
+  return _internal_worker_address();
+}
+inline void issue_landing_msg::set_worker_address(const std::string& value) {
+  _internal_set_worker_address(value);
+  // @@protoc_insertion_point(field_set:ascend.issue_landing_msg.worker_address)
+}
+inline std::string* issue_landing_msg::mutable_worker_address() {
+  // @@protoc_insertion_point(field_mutable:ascend.issue_landing_msg.worker_address)
+  return _internal_mutable_worker_address();
+}
+inline const std::string& issue_landing_msg::_internal_worker_address() const {
+  return worker_address_.GetNoArena();
+}
+inline void issue_landing_msg::_internal_set_worker_address(const std::string& value) {
+  _has_bits_[0] |= 0x00000002u;
+  worker_address_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void issue_landing_msg::set_worker_address(std::string&& value) {
+  _has_bits_[0] |= 0x00000002u;
+  worker_address_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ascend.issue_landing_msg.worker_address)
+}
+inline void issue_landing_msg::set_worker_address(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  _has_bits_[0] |= 0x00000002u;
+  worker_address_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ascend.issue_landing_msg.worker_address)
+}
+inline void issue_landing_msg::set_worker_address(const char* value, size_t size) {
+  _has_bits_[0] |= 0x00000002u;
+  worker_address_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ascend.issue_landing_msg.worker_address)
+}
+inline std::string* issue_landing_msg::_internal_mutable_worker_address() {
+  _has_bits_[0] |= 0x00000002u;
+  return worker_address_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* issue_landing_msg::release_worker_address() {
+  // @@protoc_insertion_point(field_release:ascend.issue_landing_msg.worker_address)
+  if (!_internal_has_worker_address()) {
+    return nullptr;
+  }
+  _has_bits_[0] &= ~0x00000002u;
+  return worker_address_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void issue_landing_msg::set_allocated_worker_address(std::string* worker_address) {
+  if (worker_address != nullptr) {
+    _has_bits_[0] |= 0x00000002u;
+  } else {
+    _has_bits_[0] &= ~0x00000002u;
+  }
+  worker_address_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), worker_address);
+  // @@protoc_insertion_point(field_set_allocated:ascend.issue_landing_msg.worker_address)
+}
+
+// -------------------------------------------------------------------
+
 // msg
 
 // optional .ascend.heartbeat_msg heartbeat = 1;
@@ -886,6 +1472,106 @@ inline ::ascend::emergency_msg* msg::mutable_emergency() {
   return _internal_mutable_emergency();
 }
 
+// optional .ascend.landing_request_msg landing_request = 3;
+inline bool msg::_internal_has_landing_request() const {
+  return type_case() == kLandingRequest;
+}
+inline bool msg::has_landing_request() const {
+  return _internal_has_landing_request();
+}
+inline void msg::set_has_landing_request() {
+  _oneof_case_[0] = kLandingRequest;
+}
+inline void msg::clear_landing_request() {
+  if (_internal_has_landing_request()) {
+    delete type_.landing_request_;
+    clear_has_type();
+  }
+}
+inline ::ascend::landing_request_msg* msg::release_landing_request() {
+  // @@protoc_insertion_point(field_release:ascend.msg.landing_request)
+  if (_internal_has_landing_request()) {
+    clear_has_type();
+      ::ascend::landing_request_msg* temp = type_.landing_request_;
+    type_.landing_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::ascend::landing_request_msg& msg::_internal_landing_request() const {
+  return _internal_has_landing_request()
+      ? *type_.landing_request_
+      : *reinterpret_cast< ::ascend::landing_request_msg*>(&::ascend::_landing_request_msg_default_instance_);
+}
+inline const ::ascend::landing_request_msg& msg::landing_request() const {
+  // @@protoc_insertion_point(field_get:ascend.msg.landing_request)
+  return _internal_landing_request();
+}
+inline ::ascend::landing_request_msg* msg::_internal_mutable_landing_request() {
+  if (!_internal_has_landing_request()) {
+    clear_type();
+    set_has_landing_request();
+    type_.landing_request_ = CreateMaybeMessage< ::ascend::landing_request_msg >(
+        GetArenaNoVirtual());
+  }
+  return type_.landing_request_;
+}
+inline ::ascend::landing_request_msg* msg::mutable_landing_request() {
+  // @@protoc_insertion_point(field_mutable:ascend.msg.landing_request)
+  return _internal_mutable_landing_request();
+}
+
+// optional .ascend.issue_landing_msg issue_landing = 4;
+inline bool msg::_internal_has_issue_landing() const {
+  return type_case() == kIssueLanding;
+}
+inline bool msg::has_issue_landing() const {
+  return _internal_has_issue_landing();
+}
+inline void msg::set_has_issue_landing() {
+  _oneof_case_[0] = kIssueLanding;
+}
+inline void msg::clear_issue_landing() {
+  if (_internal_has_issue_landing()) {
+    delete type_.issue_landing_;
+    clear_has_type();
+  }
+}
+inline ::ascend::issue_landing_msg* msg::release_issue_landing() {
+  // @@protoc_insertion_point(field_release:ascend.msg.issue_landing)
+  if (_internal_has_issue_landing()) {
+    clear_has_type();
+      ::ascend::issue_landing_msg* temp = type_.issue_landing_;
+    type_.issue_landing_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::ascend::issue_landing_msg& msg::_internal_issue_landing() const {
+  return _internal_has_issue_landing()
+      ? *type_.issue_landing_
+      : *reinterpret_cast< ::ascend::issue_landing_msg*>(&::ascend::_issue_landing_msg_default_instance_);
+}
+inline const ::ascend::issue_landing_msg& msg::issue_landing() const {
+  // @@protoc_insertion_point(field_get:ascend.msg.issue_landing)
+  return _internal_issue_landing();
+}
+inline ::ascend::issue_landing_msg* msg::_internal_mutable_issue_landing() {
+  if (!_internal_has_issue_landing()) {
+    clear_type();
+    set_has_issue_landing();
+    type_.issue_landing_ = CreateMaybeMessage< ::ascend::issue_landing_msg >(
+        GetArenaNoVirtual());
+  }
+  return type_.issue_landing_;
+}
+inline ::ascend::issue_landing_msg* msg::mutable_issue_landing() {
+  // @@protoc_insertion_point(field_mutable:ascend.msg.issue_landing)
+  return _internal_mutable_issue_landing();
+}
+
 inline bool msg::has_type() const {
   return type_case() != TYPE_NOT_SET;
 }
@@ -898,6 +1584,10 @@ inline msg::TypeCase msg::type_case() const {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

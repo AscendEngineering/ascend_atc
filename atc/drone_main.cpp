@@ -5,6 +5,7 @@
 #include "constants.h"
 #include <chrono>
 #include "config_handler.h"
+#include "video_transmission.h"
 
 //temp
 #include <chrono>
@@ -14,6 +15,7 @@
 int main(){
 
     drone ascendDrone;
+    video_transmission vid("random");
     
     while(true){
 
@@ -23,8 +25,29 @@ int main(){
             std::cout<<"Messages"<<std::endl;
             for(auto msg: messages){
                 std::cout<<"\t"<<msg<<std::endl;
+
+                ascend::msg recvd_msg = msg_generator::deserialize(msg);
+
+                if(recvd_msg.has_issue_landing()){
+                    //start sending video off to specified landing worker
+
+                    //start accepting movement commands and relay those directly to n3
+
+                    //dont process any messages that might've come in during landing
+                    ascendDrone.collect_messages();
+                }
+
+
+
+
+
             }
         }
+
+        //send message to ATC that we are ready to land
+        std::string msg = msg_generator::generate_land_request(config_handler::instance()["drone_name"]);
+        ascendDrone.send_to_atc(msg);
+
     }
 
     //     //if time, send heartbeat

@@ -11,3 +11,5 @@ atc/worker
 atc/test
 workers/a.out
 config.txt
+third_party/opencv-4.2.0/
+third_party/raspicam/

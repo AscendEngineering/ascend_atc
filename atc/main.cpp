@@ -51,11 +51,17 @@ int main(){
 
             if(operation == "A"){
                 msg_tracker.msg_ack(sender);
-
             }
             else if(operation == "O"){
                 data = comm::get_msg_data(recv_socket);
                 comm::send_ack(send_socket,"atc","tcp://localhost:" + constants::to_drone);
+
+                //deserialize
+                ascend::msg recvd_msg = msg_generator::deserialize(data);
+
+                if(recvd_msg.has_landing_request()){
+                    std::cout<<"Landing request"<<std::endl;
+                }
             }
             else{
                 throw std::runtime_error("Error in msg operation" + operation);
@@ -75,7 +81,7 @@ int main(){
 
             //translate name to ip
             std::string ip_address = ascendDB().getIP(drone_name);
-            comm::send_msg(send_socket,"atc","Hello Drone" + std::to_string(counter++),ip_address);
+            comm::send_msg(send_socket,"atc","Hello Drone" + std::to_string(counter++),ip_address + constants::to_drone);
         }
 
         //check what messages have not gotten returned

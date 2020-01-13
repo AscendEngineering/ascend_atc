@@ -43,7 +43,8 @@ bool ascendDB::connected(){
 std::string ascendDB::getIP(const std::string& droneName){
     //TODO
 
-    return "tcp://10.0.0.80:5556";
+    //return "tcp://10.0.0.80:";
+    return "tcp://localhost:";
 }
 
 

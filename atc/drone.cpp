@@ -3,6 +3,7 @@
 #include "ascend_zmq.h"
 #include "constants.h"
 #include "config_handler.h"
+#include <iostream>
 
 
 
@@ -43,6 +44,13 @@ std::vector<std::string> drone::collect_messages(){
             std::string data;
 
             comm::get_msg_header(recv_socket,sender,operation);
+            
+            //acknowledgement TODO
+            if(operation=="A"){
+                std::cout<<"ATC Acknowledged"<<std::endl;
+                continue;
+            }
+
             data = comm::get_msg_data(recv_socket);
             comm::send_ack(send_socket,drone_name,"tcp://localhost:" + constants::from_drone);
             messages.push_back(data);

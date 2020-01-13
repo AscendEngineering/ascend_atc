@@ -13,10 +13,21 @@ message emergency_msg {
   required string name = 1;
 }
 
+message landing_request_msg {
+  required string name = 1;
+}
+
+message issue_landing_msg {
+  required string name = 1;
+  required string worker_address = 2;
+}
+
 
 message msg {
     oneof type {
         heartbeat_msg heartbeat = 1;
         emergency_msg emergency = 2;
+        landing_request_msg landing_request = 3;
+        issue_landing_msg issue_landing = 4;
     }   
 }
