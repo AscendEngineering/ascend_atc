@@ -15,7 +15,7 @@
 int main(){
 
     drone ascendDrone;
-    video_transmission vid("random");
+    
     
     while(true){
 
@@ -30,8 +30,15 @@ int main(){
 
                 if(recvd_msg.has_issue_landing()){
                     //start sending video off to specified landing worker
+                    video_transmission vid("random");
 
                     //start accepting movement commands and relay those directly to n3
+                    ascendDrone.collect_messages();
+                    //for each message
+                        //if terminate
+                            //return
+                        //else
+                            //move drone according to message
 
                     //dont process any messages that might've come in during landing
                     ascendDrone.collect_messages();
