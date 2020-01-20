@@ -15,7 +15,8 @@
 int main(){
 
     video_transmission vid("random");
-
+    vid.start_transmission();
+    exit(0);
 
     drone ascendDrone;
     

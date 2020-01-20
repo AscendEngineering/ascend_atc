@@ -17,10 +17,14 @@ constant_files = ['constants.h']
 #drone files
 drone_files = ['drone.cpp','video_transmission.cpp',messaging_files,constant_files]
 
+#opencv
+opencv = ['opencv_core','opencv_highgui']
+
+
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
-    LIBS=['zmq', 'pqxx' ,'pq','protobuf','raspicam','raspicam_cv','opencv_highgui','opencv_core'],
+    LIBS=['zmq', 'pqxx' ,'pq','protobuf','raspicam','raspicam_cv',opencv],
 	LIBPATH=['third_party/libpqxx-6.4.5/include',
             'third_party/zeromq-4.3.2/include'],
     SCONS_CXX_STANDARD='c++14')

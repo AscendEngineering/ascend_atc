@@ -26,8 +26,9 @@ void video_transmission::start_transmission(){
         Camera.grab();
         Camera.retrieve ( image );
 
-        cv::imshow("Display window", image);
-        cv::waitKey(0);
+		  //cv::namedWindow( "Image", cv::WINDOW_AUTOSIZE );
+        //cv::imshow("Image", image);
+        //cv::waitKey(0);
 
     }
 
