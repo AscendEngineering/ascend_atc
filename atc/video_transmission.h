@@ -3,6 +3,8 @@
 #include <string>
 
 #include <raspicam/raspicam_cv.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 class video_transmission{
     

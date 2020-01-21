@@ -9,22 +9,30 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <zmq.hpp>
 
+//for timing
+#include <chrono>
+#include <ctime>
+#include <thread>
+
 
 video_transmission::video_transmission(const std::string worker_address){
     this->worker_address=worker_address;
 }
 
 void video_transmission::start_transmission(){
- 
     std::cout<<"TODO: start transmission"<<std::endl;
+	    
+    
+    Camera.set(cv::CAP_PROP_FPS,0);
+    Camera.setVideoStabilization(true);
+  
     if(!Camera.open()){
         //TODO throw error
         std::cerr <<"Error opening camera" << std::endl;
         return;
     }
     
-    //set up camera
-    Camera.set ( cv::CAP_PROP_FPS, 30);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
     std::cout<<"Connected to camera ="<<Camera.getId() << std::endl;
     cv::Mat image;
@@ -32,13 +40,18 @@ void video_transmission::start_transmission(){
     //start zmq
     zmq::context_t context(1);
     zmq::socket_t send_socket(context, ZMQ_PUSH);
+    
+    //set up camera
+    
+    
+    
+    const auto p1 = std::chrono::system_clock::now();
 
+	 unsigned int iterations = 100;
+    //for(unsigned int i=0; i< iterations; i++){
     while(true){
         Camera.grab();
         Camera.retrieve ( image );
-        std::cout<< image.rows << std::endl;
-        std::cout<< image.cols << std::endl;
-        std::cout << image.total() << std::endl; 
         
         std::string imgData(image.datastart,image.dataend);
 
@@ -49,14 +62,17 @@ void video_transmission::start_transmission(){
 
         //send over
         bool succ = comm::send_msg(send_socket,"drone1",encoded_img,"tcp://localhost:"+constants::from_drone);
-        std::cout<<"send success: " << succ << std::endl;
 
 		  //cv::namedWindow( "Image", cv::WINDOW_AUTOSIZE );
         //cv::imshow("Image", image);
         //cv::waitKey(0);
 
     }
-
+    const auto p2 = std::chrono::system_clock::now();
+    auto framesPerSecond = ((double)(1000*iterations)/(double)std::chrono::duration_cast<std::chrono::milliseconds>(p2-p1).count());
+    std::cout<< "Frames per second: " << 
+	 framesPerSecond
+	 <<std::endl;
 
 
 }

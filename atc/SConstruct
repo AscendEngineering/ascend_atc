@@ -23,12 +23,15 @@ opencv = ['opencv_core','opencv_highgui','opencv_imgcodecs']
 #base64
 base64 = ['third_party/cpp-base64/base64.cpp']
 
+#raspicam
+raspicam = ['raspicam','raspicam_cv','mmal','mmal_core','mmal_util','opencv_core','opencv_highgui' ]
+
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
-    LIBS=['zmq', 'pqxx' ,'pq','protobuf','raspicam','raspicam_cv',opencv],
-	LIBPATH=[],
-    CPPPATH=['third_party/cpp-base64'],
+    LIBS=['zmq', 'pqxx' ,'pq','protobuf',opencv,raspicam],
+	LIBPATH=['/opt/vc/lib/'],
+    CPPPATH=['third_party/cpp-base64','/usr/local/include'],
     SCONS_CXX_STANDARD='c++14')
 
 env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,constant_files])
