@@ -2,6 +2,7 @@
 
 #include <algorithm>  
 #include "ascend_zmq.h"
+#include "base64.h"
 #include "constants.h"
 #include <iostream>
 #include <opencv2/core/core.hpp>
@@ -37,12 +38,15 @@ void video_transmission::start_transmission(){
         Camera.retrieve ( image );
         std::cout<< image.rows << std::endl;
         std::cout<< image.cols << std::endl;
+        std::cout << image.total() << std::endl; 
         
         std::string imgData(image.datastart,image.dataend);
-        	
+
+        //base64
+        std::string encoded_img = base64_encode(image.datastart,image.total());
+
         //send over
-        
-        bool succ = comm::send_msg(send_socket,"drone1",imgData,"tcp://localhost:"+constants::from_drone);
+        bool succ = comm::send_msg(send_socket,"drone1",encoded_img,"tcp://localhost:"+constants::from_drone);
         std::cout<<"send success: " << succ << std::endl;
 
 		  //cv::namedWindow( "Image", cv::WINDOW_AUTOSIZE );

@@ -20,15 +20,17 @@ drone_files = ['drone.cpp','video_transmission.cpp',messaging_files,constant_fil
 #opencv
 opencv = ['opencv_core','opencv_highgui']
 
+#base64
+base64 = ['third_party/cpp-base64/base64.cpp']
 
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
     LIBS=['zmq', 'pqxx' ,'pq','protobuf','raspicam','raspicam_cv',opencv],
-	LIBPATH=['third_party/libpqxx-6.4.5/include',
-            'third_party/zeromq-4.3.2/include'],
+	LIBPATH=[],
+    CPPPATH=['third_party/cpp-base64'],
     SCONS_CXX_STANDARD='c++14')
 
 env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,constant_files])
-env.Program('drone', ['drone_main.cpp',drone_files, 'config_handler.cpp'])
+env.Program('drone', ['drone_main.cpp',drone_files, 'config_handler.cpp',base64 ])
 env.Program('worker', ['worker_main.cpp',messaging_files,constant_files])

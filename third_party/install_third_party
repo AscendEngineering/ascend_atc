@@ -1,9 +1,9 @@
 #go into archives and extract all
 
-#for FILE in $(ls archive)
-#do
-#    tar -xzf archive/$FILE
-#done
+for FILE in $(ls archive)
+do
+    tar -xzf archive/$FILE
+done
 
 #do what we can with apt-get
 sudo apt-get install autoconf automake libtool curl make g++ unzip
@@ -71,3 +71,4 @@ make
 sudo make install
 sudo ldconfig
 cd ../..
+
