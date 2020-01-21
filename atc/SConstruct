@@ -18,7 +18,7 @@ constant_files = ['constants.h']
 drone_files = ['drone.cpp','video_transmission.cpp',messaging_files,constant_files]
 
 #opencv
-opencv = ['opencv_core','opencv_highgui']
+opencv = ['opencv_core','opencv_highgui','opencv_imgcodecs']
 
 #base64
 base64 = ['third_party/cpp-base64/base64.cpp']

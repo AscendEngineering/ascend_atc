@@ -42,8 +42,10 @@ void video_transmission::start_transmission(){
         
         std::string imgData(image.datastart,image.dataend);
 
-        //base64
-        std::string encoded_img = base64_encode(image.datastart,image.total());
+        //encode and base64
+        std::vector<uchar> buf;
+        cv::imencode(".jpg",image,buf);
+        std::string encoded_img = base64_encode(buf.begin(),buf.size());
 
         //send over
         bool succ = comm::send_msg(send_socket,"drone1",encoded_img,"tcp://localhost:"+constants::from_drone);
