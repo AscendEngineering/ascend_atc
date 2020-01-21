@@ -22,10 +22,9 @@ video_transmission::video_transmission(const std::string worker_address){
 void video_transmission::start_transmission(){
     std::cout<<"TODO: start transmission"<<std::endl;
 	    
-    
+    //Camera.set(cv::CAP_PROP_EXPOSURE,0);
     Camera.set(cv::CAP_PROP_FPS,0);
-    Camera.setVideoStabilization(true);
-  
+    Camera.set(cv::CAP_PROP_MODE,0);
     if(!Camera.open()){
         //TODO throw error
         std::cerr <<"Error opening camera" << std::endl;
@@ -40,28 +39,28 @@ void video_transmission::start_transmission(){
     //start zmq
     zmq::context_t context(1);
     zmq::socket_t send_socket(context, ZMQ_PUSH);
-    
-    //set up camera
-    
-    
+   
+    //buffer for later
+    std::string encoded_img;
+    encoded_img.reserve(3686400); //rows*cols
     
     const auto p1 = std::chrono::system_clock::now();
 
 	 unsigned int iterations = 100;
-    //for(unsigned int i=0; i< iterations; i++){
-    while(true){
+    for(unsigned int i=0; i< iterations; i++){
+    //while(true){
         Camera.grab();
         Camera.retrieve ( image );
         
-        std::string imgData(image.datastart,image.dataend);
+        //std::string imgData(image.datastart,image.dataend);
 
         //encode and base64
-        std::vector<uchar> buf;
-        cv::imencode(".jpg",image,buf);
-        std::string encoded_img = base64_encode(buf.begin(),buf.size());
+        //cv::imencode(".jpg",image,buf);
+        
+        base64_encode(image.data,3686400,encoded_img);
 
         //send over
-        bool succ = comm::send_msg(send_socket,"drone1",encoded_img,"tcp://localhost:"+constants::from_drone);
+        //bool succ = comm::send_msg(send_socket,"drone1",encoded_img,"tcp://localhost:"+constants::from_drone);
 
 		  //cv::namedWindow( "Image", cv::WINDOW_AUTOSIZE );
         //cv::imshow("Image", image);
