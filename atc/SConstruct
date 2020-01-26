@@ -11,12 +11,21 @@ messaging_lib = messaging_directory+'libs/'
 messaging_def = messaging_directory+'definitions/'
 
 #create proto files
+<<<<<<< HEAD
 subprocess.check_call(["mkdir","-p", messaging_directory+"libs"])
 subprocess.check_call("protoc -I=" + messaging_def + " --cpp_out=" + messaging_lib + " " + messaging_def+'status.proto', shell=True)
 
 #messaging
 messaging_files = Glob(messaging_lib + '*.cc')
 messaging_files.extend(['atc_msg.cpp','ascend_zmq.cpp'])
+=======
+subprocess.check_call(["mkdir","-p","ascend_messaging/libs"])
+subprocess.check_call("protoc -I=ascend_messaging/definitions --cpp_out=ascend_messaging/libs ascend_messaging/definitions/status.proto", shell=True)
+
+#messaging
+messaging_files = Glob('ascend_messaging/libs/*.cc')
+messaging_files.extend(['drone_msg.cpp','ascend_zmq.cpp'])
+>>>>>>> 657a443d91243fffd92a1f23c2d00e269ebd7715
 
 #constants
 constant_files = ['constants.h']
@@ -34,8 +43,13 @@ env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
     LIBS=['zmq', 'pqxx' ,'pq','protobuf',opencv],
+<<<<<<< HEAD
 	LIBPATH=['/opt/vc/lib/',messaging_lib],
     CPPPATH=['third_party/cpp-base64','/usr/local/include',messaging_lib],
+=======
+	LIBPATH=['/opt/vc/lib/','ascend_messaging/libs'],
+    CPPPATH=['third_party/cpp-base64','/usr/local/include','ascend_messaging/libs'],
+>>>>>>> 657a443d91243fffd92a1f23c2d00e269ebd7715
     SCONS_CXX_STANDARD='c++14')
 
 env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,constant_files])
