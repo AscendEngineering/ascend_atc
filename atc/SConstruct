@@ -4,18 +4,25 @@ protoc_source = "messaging/definitions"
 protoc_dest = "messaging/libs"
 env = Environment() 
 
+#path variables
+doms_directory = 'third_party/ascend_doms/'
+messaging_directory = doms_directory+'messaging/'
+messaging_lib = messaging_directory+'libs/'
+messaging_def = messaging_directory+'definitions/'
+
 #create proto files
-subprocess.check_call("protoc -I=messaging/definitions --cpp_out=messaging/libs messaging/definitions/status.proto", shell=True)
+subprocess.check_call(["mkdir","-p", messaging_directory+"libs"])
+subprocess.check_call("protoc -I=" + messaging_def + " --cpp_out=" + messaging_lib + " " + messaging_def+'status.proto', shell=True)
 
 #messaging
-messaging_files = Glob('messaging/libs/*.cc')
-messaging_files.extend(['drone_msg.cpp','ascend_zmq.cpp'])
+messaging_files = Glob(messaging_lib + '*.cc')
+messaging_files.extend(['atc_msg.cpp','ascend_zmq.cpp'])
 
 #constants
 constant_files = ['constants.h']
 
 #drone files
-drone_files = ['drone.cpp','video_transmission.cpp',messaging_files,constant_files]
+#drone_files = ['drone.cpp','video_transmission.cpp',messaging_files,constant_files]
 
 #opencv
 opencv = ['opencv_core','opencv_highgui','opencv_imgcodecs']
@@ -23,17 +30,14 @@ opencv = ['opencv_core','opencv_highgui','opencv_imgcodecs']
 #base64
 base64 = ['third_party/cpp-base64/base64.cpp']
 
-#raspicam
-raspicam = ['raspicam','raspicam_cv','mmal','mmal_core','mmal_util','opencv_core','opencv_highgui' ]
-
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
-    LIBS=['zmq', 'pqxx' ,'pq','protobuf',opencv,raspicam],
-	LIBPATH=['/opt/vc/lib/'],
-    CPPPATH=['third_party/cpp-base64','/usr/local/include'],
+    LIBS=['zmq', 'pqxx' ,'pq','protobuf',opencv],
+	LIBPATH=['/opt/vc/lib/',messaging_lib],
+    CPPPATH=['third_party/cpp-base64','/usr/local/include',messaging_lib],
     SCONS_CXX_STANDARD='c++14')
 
 env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,constant_files])
-env.Program('drone', ['drone_main.cpp',drone_files, 'config_handler.cpp',base64 ])
+#env.Program('drone', ['drone_main.cpp',drone_files, 'config_handler.cpp',base64 ])
 env.Program('worker', ['worker_main.cpp',messaging_files,constant_files])

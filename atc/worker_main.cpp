@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <zmq.hpp>
-#include "drone_msg.h"
 #include "ascend_zmq.h"
 
 //temp

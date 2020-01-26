@@ -3,12 +3,12 @@
 #include <pqxx/pqxx>
 #include <string>
 #include "ascenddb.h"
-#include "messaging/libs/status.pb.h"
+#include "status.pb.h"
 #include "ascend_zmq.h"
 #include "constants.h"
-#include "drone_msg.h"
 #include <vector>
 #include "ledger.h"
+#include "atc_msg.h"
 
 //temp
 #include <chrono>

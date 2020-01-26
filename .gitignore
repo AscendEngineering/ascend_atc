@@ -14,3 +14,5 @@ config.txt
 third_party/opencv-4.2.0/
 third_party/raspicam/
 third_party/cpp-base64/
+third_party/archive/opencv-4.2.0/
+third_party/boost_1_72_0/
