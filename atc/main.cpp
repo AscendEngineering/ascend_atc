@@ -3,12 +3,13 @@
 #include <pqxx/pqxx>
 #include <string>
 #include "ascenddb.h"
-#include "status.pb.h"
+#include "msgDef.pb.h"
 #include "ascend_zmq.h"
 #include "constants.h"
 #include <vector>
 #include "ledger.h"
 #include "atc_msg.h"
+#include "router.h"
 
 //temp
 #include <chrono>

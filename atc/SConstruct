@@ -11,11 +11,12 @@ messaging_lib = messaging_directory+'libs/'
 messaging_def = messaging_directory+'definitions/'
 
 #create proto files
+subprocess.check_call(["rm",'-rf', messaging_directory+"libs"])
 subprocess.check_call(["mkdir","-p", messaging_directory+"libs"])
-subprocess.check_call("protoc -I=" + messaging_def + " --cpp_out=" + messaging_lib + " " + messaging_def+'status.proto', shell=True)
+subprocess.check_call("protoc -I=" + messaging_def + " --cpp_out=" + messaging_lib + " " + messaging_def+'msgDef.proto', shell=True)
 
 #messaging
-messaging_files = Glob(messaging_lib + '*.cc')
+messaging_files = Glob(messaging_lib + '*.cc') 
 messaging_files.extend(['atc_msg.cpp'])
 
 #DOMS fields
@@ -23,6 +24,9 @@ doms_files = Glob(doms_directory + "*.cpp")
 
 #constants
 constant_file = doms_directory+"constants.h"
+
+#atc specific
+atc_files = ['main.cpp','ascenddb.cpp','ledger.cpp','router.cpp']
 
 env=Environment(
     CPPDEFINES=[],
@@ -32,5 +36,4 @@ env=Environment(
     CPPPATH=['third_party/cpp-base64','/usr/local/include',messaging_lib,doms_directory],
     SCONS_CXX_STANDARD='c++14')
 
-env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,doms_files,constant_file])
-#env.Program('worker', ['worker_main.cpp',messaging_files,doms_files])
+env.Program('atc', [atc_files,messaging_files,doms_files,constant_file])
