@@ -21,6 +21,9 @@ messaging_files.extend(['atc_msg.cpp'])
 #DOMS fields
 doms_files = Glob(doms_directory + "*.cpp")
 
+#constants
+constant_file = doms_directory+"constants.h"
+
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
@@ -29,5 +32,5 @@ env=Environment(
     CPPPATH=['third_party/cpp-base64','/usr/local/include',messaging_lib,doms_directory],
     SCONS_CXX_STANDARD='c++14')
 
-env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,doms_files])
+env.Program('atc', ['main.cpp','ascenddb.cpp','ledger.cpp',messaging_files,doms_files,constant_file])
 #env.Program('worker', ['worker_main.cpp',messaging_files,doms_files])
