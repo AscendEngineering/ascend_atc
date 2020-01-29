@@ -12,6 +12,7 @@ class ascendDB{
         bool connected();
         void test();
         pqxx::result execute(std::string cmd);
+        std::string getIP(const std::string& droneName);
 
     private:
         std::shared_ptr<pqxx::connection> database;

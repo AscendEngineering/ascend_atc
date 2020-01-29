@@ -3,55 +3,99 @@
 #include <pqxx/pqxx>
 #include <string>
 #include "ascenddb.h"
-#include "messaging/libs/status.pb.h"
+#include "status.pb.h"
 #include "ascend_zmq.h"
+#include "constants.h"
+#include <vector>
+#include "ledger.h"
+#include "atc_msg.h"
+
+//temp
+#include <chrono>
+#include <thread>
+
 
 int main(){
 
+    //listening
     zmq::context_t context(1);
-    zmq::socket_t socket(context, ZMQ_ROUTER);
-    socket.bind("tcp://*:5555");
+    zmq::socket_t recv_socket(context, ZMQ_PULL);
+    recv_socket.bind("tcp://*:" + constants::from_drone);
+    ledger msg_tracker;
 
-    std::cout << "Listening..." << std::endl;
+    //sending
+    zmq::socket_t send_socket(context, ZMQ_PUSH);
+
+    //variables
+    int counter = 0;
+    zmq::pollitem_t items [] = {
+        {static_cast<void*>(recv_socket),0,ZMQ_POLLIN,0}
+
+    };
+
+    std::cout << "ATC started..." << std::endl;
+
     while(true){
 
-        //indentity
-        std::string identity;
-        comm::recv(socket,identity);
-        std::cout<<"Identity: " << identity << std::endl;
+        zmq::poll(&items[0], 1, 3000);
 
-        //delimiter
-        std::string del;
-        comm::recv(socket,del);
-        std::cout<<"delimeter: " << del << std::endl;
 
-        //recieve data
-        std::string msg;
-        comm::recv(socket, msg);
+        //from drone
+        if(items[0].revents & ZMQ_POLLIN){
+            
+            //get the header
+            std::string sender;
+            std::string operation;
+            std::string data;
+            comm::get_msg_header(recv_socket,sender,operation);
 
-        //convert to message
-        ascend::msg recieved_msg;
-        recieved_msg.ParseFromString(msg);
+            if(operation == "A"){
+                msg_tracker.msg_ack(sender);
+            }
+            else if(operation == "O"){
+                data = comm::get_msg_data(recv_socket);
+                comm::send_ack(send_socket,"atc","tcp://localhost:" + constants::to_drone);
 
-        //Process
-        if(recieved_msg.has_emergency()){
-            std::cout << recieved_msg.emergency().name() << std::endl;
+                //deserialize
+                ascend::msg recvd_msg = msg_generator::deserialize(data);
+
+                if(recvd_msg.has_landing_request()){
+                    std::cout<<"Landing request"<<std::endl;
+                }
+            }
+            else{
+                throw std::runtime_error("Error in msg operation" + operation);
+            }
+            
         }
-        else if(recieved_msg.has_heartbeat()){
-            const ascend::heartbeat_msg& heartbeat = recieved_msg.heartbeat();
-            std::cout << "Long:" << heartbeat.lng() << std::endl;
-            std::cout << "Lat:" << heartbeat.lat() << std::endl;
-            std::cout << "Alt:" << heartbeat.alt() << std::endl;
-            std::cout << "Charge:" << heartbeat.bat_percentage() << std::endl;
+        else{
+            std::cout << "Sending request to drone" << std::endl;
+            
+            //simulates something sent from worker
+
+            //add drone to mail ledger
+            std::string drone_name = "drone1";
+            
+            //mark in ledger
+            msg_tracker.msg_sent(drone_name);
+
+            //translate name to ip
+            std::string ip_address = ascendDB().getIP(drone_name);
+            comm::send_msg(send_socket,"atc","Hello Drone" + std::to_string(counter++),ip_address + constants::to_drone);
         }
 
-        std::cout<<"recieved, sending response"<< std::endl;
-        socket.setsockopt( ZMQ_IDENTITY, "PEER2", 5);
-        comm::sendmore(socket,identity);
-        comm::sendmore(socket,"");
-        comm::send(socket,"Recieved");
+        //check what messages have not gotten returned
+        std::vector<std::string> expired_drones = msg_tracker.ttl_exceeded();
+        if(expired_drones.size() > 0){
+            std::cout <<"\nERROR - Unresponsive drones" << std::endl;
+            for(auto name: expired_drones){
+                std::cout<<"\t"<<name<<"\n";
+            }
+            std::cout<<std::endl;
+        }
 
     }
+    
 
     
 
