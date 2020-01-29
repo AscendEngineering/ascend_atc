@@ -3,6 +3,7 @@ libpqxx-6.4.5
 scons-3.1.1
 zeromq-4.3.2
 *.o
+*~
 atc/.sconsign.dblite
 third_party/protobuf-3.11.2/
 atc/atc
@@ -16,3 +17,4 @@ third_party/raspicam/
 third_party/cpp-base64/
 third_party/archive/opencv-4.2.0/
 third_party/boost_1_72_0/
+third_party/libb64-1.2.1/
