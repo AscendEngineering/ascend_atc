@@ -3,12 +3,13 @@
 #include <pqxx/pqxx>
 #include <string>
 #include "ascenddb.h"
-#include "status.pb.h"
+#include "msgDef.pb.h"
 #include "ascend_zmq.h"
 #include "constants.h"
 #include <vector>
 #include "ledger.h"
 #include "atc_msg.h"
+#include "router.h"
 
 //temp
 #include <chrono>
@@ -34,6 +35,31 @@ int main(){
     };
 
     std::cout << "ATC started..." << std::endl;
+
+    //testing the routing shit
+    router drone_router;
+    drone_router.start(41.898943, -87.629394); //andrew's address
+    drone_router.end(41.902724, -87.631836); //Zach's address
+
+    //get route based on the starting and ending points
+    std::vector<waypoint> route = drone_router.getRoute();
+
+    //convert to message
+    std::string route_msg = msg_generator::generate_route(route);
+
+    //print out
+    std::cout<< route_msg << std::endl;
+
+    //go in the opposite direction
+    ascend::msg msg_route = msg_generator::deserialize(route_msg);
+    if(msg_route.has_waypoints()){
+        ascend::waypointList_msg waypoints = msg_route.waypoints();
+        for(auto waypoint: waypoints.waypoint()){
+            std::cout << "lat: " << waypoint.lat() << " lng: " << waypoint.lng() << " alt: " << waypoint.alt() << std::endl;
+        }
+    }
+
+    exit(0);
 
     while(true){
 
@@ -94,12 +120,6 @@ int main(){
             std::cout<<std::endl;
         }
 
-    }
-    
-
-    
-
-
-    return 0;   
+    } 
 }
 
