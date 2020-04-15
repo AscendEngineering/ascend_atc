@@ -34,37 +34,9 @@ int main(){
 
     };
 
-    std::cout << "ATC started..." << std::endl;
-
-    //testing the routing shit
-    router drone_router;
-    drone_router.start(41.898943, -87.629394); //andrew's address
-    drone_router.end(41.902724, -87.631836); //Zach's address
-
-    //get route based on the starting and ending points
-    std::vector<waypoint> route = drone_router.getRoute();
-
-    //convert to message
-    std::string route_msg = msg_generator::generate_route(route);
-
-    //print out
-    std::cout<< route_msg << std::endl;
-
-    //go in the opposite direction
-    ascend::msg msg_route = msg_generator::deserialize(route_msg);
-    if(msg_route.has_waypoints()){
-        ascend::waypointList_msg waypoints = msg_route.waypoints();
-        for(auto waypoint: waypoints.waypoint()){
-            std::cout << "lat: " << waypoint.lat() << " lng: " << waypoint.lng() << " alt: " << waypoint.alt() << std::endl;
-        }
-    }
-
-    exit(0);
-
     while(true){
 
         zmq::poll(&items[0], 1, 3000);
-
 
         //from drone
         if(items[0].revents & ZMQ_POLLIN){
@@ -79,6 +51,7 @@ int main(){
                 msg_tracker.msg_ack(sender);
             }
             else if(operation == "O"){
+
                 data = comm::get_msg_data(recv_socket);
                 comm::send_ack(send_socket,"atc","tcp://localhost:" + constants::to_drone);
 
@@ -86,7 +59,7 @@ int main(){
                 ascend::msg recvd_msg = msg_generator::deserialize(data);
 
                 if(recvd_msg.has_landing_request()){
-                    std::cout<<"Landing request"<<std::endl;
+                    //comm::send_msg(send_socket,"atc",,"tcp://localhost:" + constants::to_drone);
                 }
             }
             else{
