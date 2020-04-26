@@ -5,30 +5,31 @@
 ascendDB::ascendDB(){
     try{
         this->database = std::make_shared<pqxx::connection>(connection_uri);
-        this->conn = std::make_shared<pqxx::work>(*database);
 
     }catch (const std::exception &e){
-        std::cout <<"Error in connecting db: " << e.what() << std::endl;
+        std::cerr <<"Error in connecting db: " << e.what() << std::endl;
     }
 }
 
 pqxx::result ascendDB::execute(std::string cmd){
+    std::shared_ptr<pqxx::work> conn = std::make_shared<pqxx::work>(*database);
     pqxx::result result;
     if(connected()){
         try{
-            result = this->conn->exec(cmd);
+            result = conn->exec(cmd);
         }catch (const std::exception &e){
-            std::cout <<"Error in executing db: " << e.what() << std::endl;
+            std::cerr <<"Error in executing db: " << e.what() << std::endl;
         }
     }
 
-    this->conn->commit();
+    conn->commit();
     return result;
 }
 
 
 void ascendDB::test(){
-    pqxx::result result = this->conn->exec("SELECT * FROM \"Battery\"");
+    std::shared_ptr<pqxx::work> conn = std::make_shared<pqxx::work>(*database);
+    pqxx::result result = conn->exec("SELECT * FROM \"Battery\"");
     for(auto row: result){
         for(auto data: row){
             std::cout<< data <<std::endl;
@@ -37,14 +38,39 @@ void ascendDB::test(){
 }
 
 bool ascendDB::connected(){
-    return this->database->is_open();
+    return database->is_open();
 }
 
-std::string ascendDB::getIP(const std::string& droneName){
-    //TODO
+std::string ascendDB::getConnectionInfo(const std::string& droneName){
 
-    //return "tcp://10.0.0.80:";
-    return "tcp://localhost:";
+    std::string retVal = "";
+    std::shared_ptr<pqxx::work> conn = std::make_shared<pqxx::work>(*database);
+    try{
+        std::string find_cmd = "SELECT \"connectInfo\" FROM \"Drone\" WHERE \"model\"='" + droneName + "'";
+        pqxx::row result = conn->exec1(find_cmd);
+
+        for(auto data: result){
+            retVal = data.as<std::string>();
+        }
+    }
+    catch(...){}
+    
+    return retVal;
+}
+
+void ascendDB::storeConnectionInfo(const std::string& droneName,const std::string& connectionInfo){
+    
+    std::shared_ptr<pqxx::work> conn = std::make_shared<pqxx::work>(*database);
+    std::string insert_cmd = "INSERT INTO \"Drone\" (\"model\",\"connectInfo\") values ('"
+        + droneName + "','"
+        + connectionInfo
+        + "') ON CONFLICT (model)"
+        + " DO UPDATE SET \"connectInfo\"='" + connectionInfo + "'"
+        + " WHERE \"Drone\".model='" + droneName + "'";
+
+    conn->exec0(insert_cmd);
+    conn->commit();
+
 }
 
 

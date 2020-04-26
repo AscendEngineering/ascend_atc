@@ -18,3 +18,6 @@ third_party/cpp-base64/
 third_party/archive/opencv-4.2.0/
 third_party/boost_1_72_0/
 third_party/libb64-1.2.1/
+third_party/cpp-netlib-0.13.0-final/
+third_party/cpp-httplib-0.5.9/
+third_party/json-3.7.3/
