@@ -6,6 +6,7 @@ do
 done
 
 #do what we can with apt-get
+sudo apt-get update -y
 sudo apt-get install -y autoconf automake libtool curl make g++ unzip
 sudo apt-get install -y libboost-all-dev
 sudo apt-get install -y scons

@@ -10,6 +10,8 @@
 #include "ledger.h"
 #include "atc_msg.h"
 #include "router.h"
+#include "dat.h"
+#include "atc_time.h"
 
 //temp
 #include <chrono>
@@ -17,6 +19,10 @@
 
 
 int main(){
+
+    dat drone_dict;
+    std::cout << "drone endpoint: " << drone_dict.get_endpoint("drone_1") << std::endl;
+    exit(0);
 
     //listening
     zmq::context_t context(1);
@@ -53,13 +59,13 @@ int main(){
             else if(operation == "O"){
 
                 data = comm::get_msg_data(recv_socket);
-                comm::send_ack(send_socket,"atc","tcp://localhost:" + constants::to_drone);
+                comm::send_ack(send_socket,"atc",drone_dict.get_endpoint(sender));
 
                 //deserialize
                 ascend::msg recvd_msg = msg_generator::deserialize(data);
 
                 if(recvd_msg.has_landing_request()){
-                    //comm::send_msg(send_socket,"atc",,"tcp://localhost:" + constants::to_drone);
+                    //comm::send_msg(send_socket,"atc",drone_dict.get_endpoint(sender));
                 }
             }
             else{
@@ -79,7 +85,7 @@ int main(){
             msg_tracker.msg_sent(drone_name);
 
             //translate name to ip
-            std::string ip_address = ascendDB().getIP(drone_name);
+            std::string ip_address = ascendDB().getConnectionInfo(drone_name);
             comm::send_msg(send_socket,"atc","Hello Drone" + std::to_string(counter++),ip_address + constants::to_drone);
         }
 
