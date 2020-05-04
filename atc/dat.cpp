@@ -1,6 +1,6 @@
 #include "dat.h"
 #include "httplib.h"
-#include "atc_time.h"
+#include "utilities.h"
 #include "nlohmann/json.hpp"
 #include <iostream>
 
@@ -16,7 +16,7 @@ std::string dat::get_endpoint(const std::string& drone_name){
 
     nlohmann::json endpoint_info = nlohmann::json::parse(endpoint, nullptr, false);
     if(!endpoint_info.is_discarded()){
-        if(endpoint_info["expiresOn"].get<int>() > atc_time::now_epoch()){
+        if(endpoint_info["expiresOn"].get<int>() > utilities::now_epoch()){
             return endpoint_info["proxy"].get<std::string>();
         }
     }
@@ -32,6 +32,8 @@ std::string dat::get_endpoint(const std::string& drone_name){
             return endpoint_info["proxy"].get<std::string>();
         }
     }
+
+    std::cerr << "Drone " << drone_name << " does not exist in remoteit" << std::endl;
     return "";
 }
 
@@ -111,12 +113,20 @@ bool dat::request_and_store_endpoint(const std::string& drone_name){
     cli.set_follow_location(true);
     auto res = cli.Post(remoteit_connect_url.c_str(),headers, device_details.dump(),"application/json");
 
-    //modify expiration
+    //modify
     if(res){
+
+        //expiration
         nlohmann::json returned_connection = nlohmann::json::parse(res->body)["connection"];
         long expires_on = std::stol(returned_connection["expirationsec"].get<std::string>()) 
-            + atc_time::now_epoch();
+            + utilities::now_epoch();
         returned_connection["expiresOn"] = expires_on;
+
+        //endpoint
+        std::string endpoint = returned_connection["proxy"].get<std::string>();
+        returned_connection["proxy"] = endpoint.substr(endpoint.find("//")+2);
+
+        //store
         database.storeConnectionInfo(drone_name, returned_connection.dump());
 
         return true;

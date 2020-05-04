@@ -10,6 +10,7 @@ atc/atc
 atc/drone
 atc/worker
 atc/test
+atc/logs/*
 workers/a.out
 config.txt
 third_party/opencv-4.2.0/
@@ -21,3 +22,4 @@ third_party/libb64-1.2.1/
 third_party/cpp-netlib-0.13.0-final/
 third_party/cpp-httplib-0.5.9/
 third_party/json-3.7.3/
+third_party/spdlog-1.5.0/
