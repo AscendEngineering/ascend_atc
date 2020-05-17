@@ -10,36 +10,59 @@
 #include "ledger.h"
 #include "atc_msg.h"
 #include "router.h"
-#include "drone_info.h"
+#include "worker.h"
 #include "utilities.h"
+#include "logging.h"
+#include "dat.h"
 
 //temp
 #include <chrono>
 #include <thread>
 
 
+
+void process_request(const std::string& sender,const ascend::msg& recvd_msg){
+
+    if(recvd_msg.has_heartbeat()){
+        worker::handle_heartbeat(sender,recvd_msg);
+    }
+    else if(recvd_msg.has_emergency()){
+        //TODO
+    }
+    else if(recvd_msg.has_takeoff_request()){
+        //TODO
+    }
+    else if(recvd_msg.has_landing_request()){
+        //TODO
+    }
+    else if(recvd_msg.has_status()){
+        worker::handle_status_change(sender,recvd_msg);
+    }
+    
+
+
+}
+
+
+
 int main(){
 
-    utilities::setup_logging();
-    exit(0);
+    logging::setup_logging();
 
     //listening
     zmq::context_t context(1);
     zmq::socket_t recv_socket(context, ZMQ_PULL);
-    recv_socket.bind("tcp://*:" + constants::from_drone);
-    drone_info drone_dict;
-    ledger msg_tracker;
-
-    //sending
     zmq::socket_t send_socket(context, ZMQ_PUSH);
+    recv_socket.bind("tcp://*:" + constants::from_drone);
 
     //variables
-    int counter = 0;
+    dat drone_connection;
+    ledger msg_tracker;
     zmq::pollitem_t items [] = {
         {static_cast<void*>(recv_socket),0,ZMQ_POLLIN,0}
     };
 
-    std::cout << "Listening..." << std::endl;
+    spdlog::info("Listening...");
     while(true){
 
         zmq::poll(&items[0], 1, 3000);
@@ -53,36 +76,25 @@ int main(){
             std::string data;
             comm::get_msg_header(recv_socket,sender,operation);
 
-            //operation
+            //message
             if(operation == "A"){
                 msg_tracker.msg_ack(sender);
             }
             else if(operation == "O"){
                 data = comm::get_msg_data(recv_socket);
-                comm::send_ack(send_socket,"atc", drone_dict.get_endpoint(sender));
+                comm::send_ack(send_socket,"atc", drone_connection.get_endpoint(sender));
                 ascend::msg recvd_msg = msg_generator::deserialize(data);
-
-                //landing request
-                if(recvd_msg.has_landing_request()){
-                    //comm::send_msg(send_socket,"atc",drone_dict.get_endpoint(sender));
-                }
-                else if(recvd_msg.has_status()){
-                    drone_dict.handle_status_change(sender,recvd_msg);
-                }
-                else if(recvd_msg.has_heartbeat()){
-                    drone_dict.handle_heartbeat(sender,recvd_msg);
-                }
-
+                process_request(sender,recvd_msg);
             }
             else{
                 throw std::runtime_error("Error in msg operation" + operation);
             }
         }
 
-        //notify of unresponsive drones
+        //unresponsive drones
         std::vector<std::string> expired_drones = msg_tracker.ttl_exceeded();
         if(expired_drones.size() > 0){
-            std::cerr <<"\nERROR - Unresponsive drones" << std::endl;
+            spdlog::error("\nERROR - Unresponsive drones");
             for(auto name: expired_drones){
                 std::cerr<<"\t"<<name<<"\n";
             }

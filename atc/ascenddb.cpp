@@ -1,6 +1,7 @@
 #include "ascenddb.h"
 #include "constants.h"
 #include <boost/algorithm/string/predicate.hpp>
+#include "utilities.h"
 
 
 namespace {
@@ -21,7 +22,7 @@ namespace {
             retval = constants::RETIRED;
         }
         else{
-            std::cerr << "Invalid string status: " << status << std::endl;
+            spdlog::error("Invalid string status: "+status);
         }
         return retval;
     }
@@ -43,24 +44,19 @@ namespace {
             return "retired";
         }
         else{
-            std::cerr << "Invalid enum status: " << status << std::endl;
+            spdlog::error( "Invalid enum status: "+status);
         }
         return retval;
     }
 
-
-
 }
-
-
-
 
 ascendDB::ascendDB(){
     try{
         this->database = std::make_shared<pqxx::connection>(connection_uri);
 
     }catch (const std::exception &e){
-        std::cerr <<"Error in connecting db: " << e.what() << std::endl;
+        spdlog::error("Error in connecting db: "+std::string(e.what()));
     }
 }
 
@@ -120,7 +116,7 @@ pqxx::result ascendDB::write1(const std::string cmd){
         try{
             result = conn->exec(cmd);
         }catch (const std::exception &e){
-            std::cerr <<"Error in executing db: " << e.what() << std::endl;
+            spdlog::error("Error in executing db: "+std::string(e.what()));
         }
     }
 

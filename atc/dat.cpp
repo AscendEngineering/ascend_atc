@@ -3,6 +3,7 @@
 #include "utilities.h"
 #include "nlohmann/json.hpp"
 #include <iostream>
+#include "utilities.h"
 
 
 dat::dat(){
@@ -33,7 +34,7 @@ std::string dat::get_endpoint(const std::string& drone_name){
         }
     }
 
-    std::cerr << "Drone " << drone_name << " does not exist in remoteit" << std::endl;
+    spdlog::error("Drone "+drone_name+" does not exist in remoteit");
     return "";
 }
 
@@ -57,7 +58,7 @@ void dat::remoteit_authenticate(){
         remoteit_ticket = nlohmann::json::parse(res->body);
     }
     else{
-        std::cerr << "UNABLE TO AUTHENTICATE WITH REMOTEIT" << std::endl;
+        spdlog::error("UNABLE TO AUTHENTICATE WITH REMOTEIT");
     }
 }
 
@@ -86,7 +87,7 @@ void dat::remoteit_refresh_devices(){
         }
     }
     else{
-        std::cerr << "REMOTEIT DEVICE FETCH FAILED" << std::endl;
+        spdlog::error("REMOTEIT DEVICE FETCH FAILED");
     }
 }
 
@@ -132,7 +133,7 @@ bool dat::request_and_store_endpoint(const std::string& drone_name){
         return true;
     }
     else{
-        std::cerr << "ERROR IN RETREIVING ENDPOINT " << std::endl;
+        spdlog::error("ERROR IN RETREIVING ENDPOINT ");
         return false;
     }
 

@@ -4,6 +4,7 @@
 #include <memory>
 #include <pqxx/pqxx>
 #include <iostream>
+#include "logging.h"
 
 //const std::string connection_uri = "postgresql://ascend:ZachLikesAnal917@ascend-atc.duckdns.org:5432/ascend_db"; //needed when on remote network
 const std::string connection_uri = "postgresql://ascend:ZachLikesAnal917@localhost:5432/ascend_db"; //needed when on local network
@@ -32,15 +33,12 @@ class ascendDB{
                     return conn->exec1(cmd)[0].as<T>();
                 }
                 catch(const std::exception &e){
-                    std::cerr << "Read: " << cmd << "did not work -> " << e.what() << std::endl;
+                    spdlog::error("Read: "+cmd+"did not work -> "+e.what());
                 }
             }
             return T();
         }
         
-
-        
-
 };
 
 

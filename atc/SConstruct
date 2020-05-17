@@ -30,13 +30,13 @@ constant_file = doms_directory+"constants.h"
 
 #atc specific
 atc_files = ['main.cpp','ascenddb.cpp','ledger.cpp','router.cpp','dat.cpp',
-    'drone_info.cpp']
+    'worker.cpp','logging.cpp']
 
     
 env=Environment(
     CPPDEFINES=[],
     CCFLAGS=['-g'],
-    LIBS=['zmq', 'pqxx' ,'pq','protobuf','spdlog'],
+    LIBS=['zmq', 'pqxx' ,'pq','protobuf','spdlog','pthread'],
 	LIBPATH=['/opt/vc/lib/',messaging_lib,log_path+'build'],
     CPPPATH=['third_party/cpp-base64','/usr/local/include',
         messaging_lib,doms_directory,http_lib,json_lib, log_path+'include'],
