@@ -10,7 +10,6 @@
 #include "ledger.h"
 #include "atc_msg.h"
 #include "router.h"
-#include "worker.h"
 #include "utilities.h"
 #include "logging.h"
 #include "dat.h"
@@ -24,19 +23,24 @@
 void process_request(const std::string& sender,const ascend::msg& recvd_msg){
 
     if(recvd_msg.has_heartbeat()){
-        worker::handle_heartbeat(sender,recvd_msg);
+       //TODO
+       spdlog::info("Sender " + sender + " sent heartbeat");
     }
     else if(recvd_msg.has_emergency()){
         //TODO
+        spdlog::info("Sender " + sender + " sent emergency");
     }
     else if(recvd_msg.has_takeoff_request()){
         //TODO
+        spdlog::info("Sender " + sender + " sent takeoff request");
     }
     else if(recvd_msg.has_landing_request()){
         //TODO
+        spdlog::info("Sender " + sender + " sent landing request");
     }
     else if(recvd_msg.has_status()){
-        worker::handle_status_change(sender,recvd_msg);
+        //TODO
+        spdlog::info("Sender " + sender + " sent status request");
     }
     
 
@@ -69,6 +73,8 @@ int main(){
 
         //from drone
         if(items[0].revents & ZMQ_POLLIN){
+
+            std::cout << "giot it" << std::endl;
             
             //header
             std::string sender;
@@ -82,7 +88,8 @@ int main(){
             }
             else if(operation == "O"){
                 data = comm::get_msg_data(recv_socket);
-                comm::send_ack(send_socket,"atc", drone_connection.get_endpoint(sender));
+                std::cout << "Sending ack to: " << drone_connection.get_endpoint(sender) << std::endl;
+                bool suc = comm::send_ack(send_socket,"atc", drone_connection.get_endpoint(sender));
                 ascend::msg recvd_msg = msg_generator::deserialize(data);
                 process_request(sender,recvd_msg);
             }

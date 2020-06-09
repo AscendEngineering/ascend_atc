@@ -29,8 +29,7 @@ doms_files = Glob(doms_directory + "*.cpp")
 constant_file = doms_directory+"constants.h"
 
 #atc specific
-atc_files = ['main.cpp','ascenddb.cpp','ledger.cpp','router.cpp','dat.cpp',
-    'worker.cpp','logging.cpp']
+atc_files = ['main.cpp','ascenddb.cpp','ledger.cpp','router.cpp','dat.cpp','logging.cpp']
 
     
 env=Environment(

@@ -125,6 +125,7 @@ bool dat::request_and_store_endpoint(const std::string& drone_name){
 
         //endpoint
         std::string endpoint = returned_connection["proxy"].get<std::string>();
+        std::cout << "Found endpoint: " << endpoint << std::endl;
         returned_connection["proxy"] = endpoint.substr(endpoint.find("//")+2);
 
         //store
